@@ -1,14 +1,26 @@
 const express = require('express');
 const mysql = require('mysql');
+const path = require('path');
 const app = express();
 
 
 // Create connection
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: '127.0.0.1',
+    port: '3306',
     user: 'root',
     password: '',
     database: ''
+});
+
+
+app.use(express.static(path.join(__dirname, "build")));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
 
