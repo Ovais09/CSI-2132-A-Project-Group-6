@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Patient from './PatientComponents';
+import Patient from './Patient';
 import '@fontsource/roboto/300.css';
 
 ReactDOM.render(
