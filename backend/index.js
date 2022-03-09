@@ -14,13 +14,13 @@ const db = mysql.createConnection({
 });
 
 
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join("../frontend/", "build")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.sendFile(path.join("../frontend", "build", "index.html"));
 });
 
 
