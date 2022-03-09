@@ -8,8 +8,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Calendar from './Calendar.js';
 import Profile from './UserProfile.js';
 import Navbar from './Navbar.js';
-
-
+import AppointmentsList from './AppointmentsList.js';
+import RecordsList from './RecordsList.js';
 
 function Patient() {  
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -25,7 +25,7 @@ function Patient() {
   return (
     <div className="Patient">
       <ThemeProvider theme = {theme}>
-        <Paper style={{height: "100vh"}}>
+        <Paper>
           <Typography variant="h1">PATIENT DASHBOARD</Typography>
           <Navbar/>
           <div className="Body">
@@ -35,6 +35,12 @@ function Patient() {
               </Grid>
               <Grid item sm={12} md={5} style={{padding:'20px'}}>
                 <Calendar/>
+              </Grid>
+              <Grid item sm={12} md={7} style={{padding:'20px'}}>
+                <RecordsList/>
+              </Grid>
+              <Grid item sm={12} md={5} style={{padding:'20px'}}>
+                <AppointmentsList/>
               </Grid>
             </Grid>
           </div>
