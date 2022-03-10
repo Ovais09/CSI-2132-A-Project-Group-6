@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/CSI-2132-A-Project-Group-6/static/css/main.f8efc944.css",
-    "main.js": "/CSI-2132-A-Project-Group-6/static/js/main.38fe5d90.js",
+    "main.js": "/CSI-2132-A-Project-Group-6/static/js/main.a0e9b6a1.js",
     "static/media/roboto-all-300-normal.woff": "/CSI-2132-A-Project-Group-6/static/media/roboto-all-300-normal.8fc5f5f22c9951113696.woff",
     "static/media/roboto-latin-300-normal.woff2": "/CSI-2132-A-Project-Group-6/static/media/roboto-latin-300-normal.0109a2ace896a506a0aa.woff2",
     "static/media/roboto-cyrillic-ext-300-normal.woff2": "/CSI-2132-A-Project-Group-6/static/media/roboto-cyrillic-ext-300-normal.12d37040a0160a948ff1.woff2",
@@ -12,10 +12,10 @@
     "static/media/roboto-greek-ext-300-normal.woff2": "/CSI-2132-A-Project-Group-6/static/media/roboto-greek-ext-300-normal.04e05839d6a35e046c13.woff2",
     "index.html": "/CSI-2132-A-Project-Group-6/index.html",
     "main.f8efc944.css.map": "/CSI-2132-A-Project-Group-6/static/css/main.f8efc944.css.map",
-    "main.38fe5d90.js.map": "/CSI-2132-A-Project-Group-6/static/js/main.38fe5d90.js.map"
+    "main.a0e9b6a1.js.map": "/CSI-2132-A-Project-Group-6/static/js/main.a0e9b6a1.js.map"
   },
   "entrypoints": [
     "static/css/main.f8efc944.css",
-    "static/js/main.38fe5d90.js"
+    "static/js/main.a0e9b6a1.js"
   ]
 }
