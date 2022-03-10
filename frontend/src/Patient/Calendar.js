@@ -11,6 +11,8 @@ export default function StaticDatePickerLandscape() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <StaticDatePicker
+        sx={{ bgColor: "pink"}}
+        label="read-only"
         orientation="landscape"
         openTo="day"
         value={value}

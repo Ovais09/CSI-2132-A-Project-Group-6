@@ -9,6 +9,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Avatar  from '@mui/material/Avatar';
+import Drawer from '@mui/material/Drawer';
+import Link from '@mui/material/Link';
 
 function stringToColor(string) {
     let hash = 0;
@@ -43,9 +45,24 @@ function stringAvatar(name) {
 }
 
 export default function Navbar() {
-  
+  const [open, setOpen] = React.useState(false);
+  const toggleDrawer = (newOpen) => () => {
+    setOpen(newOpen);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <Drawer anchor="left" open={open} onClose={toggleDrawer(false)} onOpen={toggleDrawer(true)}>
+        <Link component="button" variant="subtitle1" underline="hover" sx={{ color: 'text.primary', fontSize: 34, p: 3 }} onClick={() => {console.info("I'm a button."); }}>
+          Disconnect
+        </Link>
+        <Link component="button" variant="subtitle1" underline="hover" sx={{ color: 'text.primary', fontSize: 34, p: 3 }} onClick={() => {console.info("I'm a button."); }}>
+          Employee Dashboard
+        </Link>
+        <Link component="button" variant="subtitle1" underline="hover" sx={{ color: 'text.primary', fontSize: 34, p: 3 }} onClick={() => {console.info("I'm a button."); }}>
+          Help
+        </Link>
+      </Drawer>
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -53,18 +70,13 @@ export default function Navbar() {
             edge="start"
             color="inherit"
             aria-label="open drawer"
+            onClick={toggleDrawer(true)}
             sx={{ mr: 2 }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-              [BranchName]
-          </Typography>
+          <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }}
+          >PATIENT DASHBOARD</Typography>
           
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

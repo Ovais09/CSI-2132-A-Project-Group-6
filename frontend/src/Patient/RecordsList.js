@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import Typography from '@mui/material/Typography';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 40 },
@@ -43,15 +44,21 @@ const rows = [
 ];
 
 export default function DataGridDemo() {
+
+  function handleClick () {
+    console.log('h');
+  }
+
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
+      <Typography variant="h4" align="left" sx={{ p: 3 }}>Records</Typography>
+      <DataGrid 
+        sx={{ bgcolor: 'background.paper', m: 1 }}
         rows={rows}
         columns={columns}
-        pmedicationSize={5}
-        rowsPerPmedicationOptions={[5]}
-        checkboxSelection
-        disableSelectionOnClick
+        pageSize={15}
+        rowsPerPageOptions={[15]}
+        onRowClick={handleClick}
       />
     </div>
   );
