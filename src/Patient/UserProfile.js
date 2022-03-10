@@ -2,13 +2,15 @@ import '../App.css';
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import Avatar  from '@mui/material/Avatar';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import PendingIcon from '@mui/icons-material/Pending';
-
+import EditIcon from '@mui/icons-material/Edit';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import { CardActionArea } from '@mui/material';
 
 function PatientProfile() {
+    const [show, setShow] = React.useState(false);
     function stringToColor(string) {
         let hash = 0;
         let i;
@@ -39,48 +41,47 @@ function PatientProfile() {
             children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
         };
     }
+    function handleClick () {
+        setShow(!show);
+    }
   return (
-    <div className="PatientProfile">
-        <div className="Body">
-            <Accordion>
-                <AccordionSummary 
-                expandIcon={<PendingIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header">
-                    <Grid container id="Grid" justifyContent="space-evenly">
-                        <Grid item id="GridItem">
-                            <Grid item sm={5} md={12} id="GridItem">
-                                <Avatar {...stringAvatar('Firstname Lastname')}/>
-                            </Grid>
-                            <Grid item sm={7} md={12} id="GridItem">
-                                <Typography variant="caption" color="text.secondary">Name</Typography>
-                                <Typography variant="h6">Firstname Lastname</Typography>
-                            </Grid>
-                        </Grid>
+    <CardActionArea sx={{ height:'100%' }} onClick={handleClick}>
+        <CardMedia>
+            <Grid container id="Grid" justifyContent="space-evenly">
+                <Grid item id="GridItem" sx={{ p: 2 }}>
+                    <Avatar {...stringAvatar('Firstname Lastname')}/>
+                </Grid>
+                <Grid item id="GridItem">
+                    <Typography variant="caption" color="text.secondary">Name</Typography>
+                    <Typography variant="h6">Firstname Lastname</Typography>
+                </Grid>
+            </Grid>
+        </CardMedia>
+        {show ? (
+            <CardContent>
+                <Grid container rowSpacing={1}>
+                    <Grid item xs={6} sx={{ p: 2 }}>
+                        <Typography variant="caption" color="text.secondary">Age</Typography>
+                        <Typography variant="subtitle2">[age] years</Typography>
                     </Grid>
-                </AccordionSummary>
-                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                        <Grid item xs={6}>
-                            <Typography variant="caption" color="text.secondary">Age</Typography>
-                            <Typography variant="subtitle2">[age] years</Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography variant="caption" color="text.secondary">Date Of Birth</Typography>
-                            <Typography variant="subtitle2">[YYYY-MM-DD]</Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography variant="caption" color="text.secondary">Contact</Typography>
-                            <Typography variant="subtitle2">[XXX-XXX-XXXX]</Typography>
-                            <Typography variant="subtitle2">[XXXXXX@XXXXXX.XX]</Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography variant="caption" color="text.secondary">Address</Typography>
-                            <Typography variant="subtitle2">[full address]</Typography>
-                        </Grid>
+                    <Grid item xs={6} sx={{ p: 2 }}>
+                        <Typography variant="caption" color="text.secondary">Date Of Birth</Typography>
+                        <Typography variant="subtitle2">[YYYY-MM-DD]</Typography>
                     </Grid>
-            </Accordion>
-          </div>
-    </div>
+                    <Grid item xs={6} sx={{ p: 2 }}>
+                        <Typography variant="caption" color="text.secondary">Contact</Typography>
+                        <Typography variant="subtitle2">[XXX-XXX-XXXX]</Typography>
+                        <Typography variant="subtitle2">[XXXXXX@XXXXXX.XX]</Typography>
+                    </Grid>
+                    <Grid item xs={6} sx={{ p: 2 }}>
+                        <Typography variant="caption" color="text.secondary">Address</Typography>
+                        <Typography variant="subtitle2">[full address]</Typography>
+                    </Grid>
+                <IconButton sx={{ position: 'absolute', bottom:'5px', right:'5px' }} aria-label="edit"><EditIcon /></IconButton >
+                </Grid>
+            </CardContent>
+        ) : null}
+    </CardActionArea>
   );
 }
 
