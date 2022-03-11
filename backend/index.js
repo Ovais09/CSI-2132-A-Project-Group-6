@@ -5,7 +5,7 @@ const app = express();
 
 
 // Create connection
-const db = mysql.createConnection({
+const con = mysql.createConnection({
     host: '127.0.0.1',
     port: '3306',
     user: 'root',
@@ -13,6 +13,13 @@ const db = mysql.createConnection({
     database: ''
 });
 
+con.connect((err) => {
+  if (err) {
+    console.log("Error connecting");
+  } else {
+    console.log("Connection established");
+  }
+});
 
 app.use(express.static(path.join("../frontend/", "build")));
 app.use(express.json());
