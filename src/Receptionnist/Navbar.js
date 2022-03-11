@@ -57,7 +57,10 @@ export default function Navbar() {
           Disconnect
         </Link>
         <Link component="button" variant="subtitle1" underline="hover" sx={{ color: 'text.primary', fontSize: 24, p: 3 }} onClick={() => {console.info("I'm a button."); }}>
-          Employee Dashboard
+          Patient Dashboard
+        </Link>
+        <Link component="button" variant="subtitle1" underline="hover" sx={{ color: 'text.primary', fontSize: 24, p: 3 }} onClick={() => {console.info("I'm a button."); }}>
+          Help
         </Link>
         <Link component="button" variant="subtitle1" underline="hover" sx={{ color: 'text.primary', fontSize: 24, p: 3 }} onClick={() => {console.info("I'm a button."); }}>
           Change Branch
@@ -79,7 +82,7 @@ export default function Navbar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }}
-          >PATIENT DASHBOARD</Typography>
+          >RECEPTIONNIST DASHBOARD</Typography>
           
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

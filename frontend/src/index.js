@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Patient from './Patient';
+import Receptionnist from './Receptionnist';
 import '@fontsource/roboto/300.css';
 
 ReactDOM.render(
@@ -10,7 +11,7 @@ ReactDOM.render(
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
     </head>
     <div className="App">
-      <Patient />
+      <Receptionnist />
     </div>
   </React.StrictMode>,
   document.getElementById('root')
