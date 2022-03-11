@@ -7,7 +7,7 @@ on:
   push:
     branches: [ ovais-branch ]
   pull_request:
-    branches: [ main ]
+    branches: [ ovais-branch ]
 
 jobs:
   build:
