@@ -27,11 +27,6 @@ jobs:
         cache: 'npm'
     - name: Use Node.js ${{ matrix.node-version }}
       run: |
-          cd frontend
-          ls
-          npm ci
-          npm run build
-          cd ..
           cd backend
           npm run start
           
