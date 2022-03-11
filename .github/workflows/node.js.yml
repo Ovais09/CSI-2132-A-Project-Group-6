@@ -28,6 +28,7 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       run: |
           cd backend
+          npm install
           npm run start
           
      
