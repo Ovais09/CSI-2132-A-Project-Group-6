@@ -10,7 +10,7 @@ import Profile from './UserProfile.js';
 import Navbar from '../Components/Navbar.js';
 import Appointments from './Appointments.js';
 import RecordsList from './RecordsList.js';
-import Rating from './Rating.js';
+import Rating from '../Components/Rating.js';
 
 function Patient() {  
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
