@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Patient from './Patient';
-import Receptionnist from './Receptionnist';
+import Receptionist from './Receptionist';
 import '@fontsource/roboto/300.css';
+import Dentist from './Dentist';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -11,7 +12,9 @@ ReactDOM.render(
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
     </head>
     <div className="App">
-      <Receptionnist />
+      <Receptionist />
+      <Dentist />
+      <Patient />
     </div>
   </React.StrictMode>,
   document.getElementById('root')

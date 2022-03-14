@@ -5,12 +5,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
 import { Paper } from "@mui/material"
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import Calendar from '../Components/Calendar';
-import Navbar from '../Components/Navbar.js';
-import Appointments from './Appointments.js';
-import Records from './Records.js';
+import Navbar from '../Components/Navbar';
 
-function Receptionist() {  
+function Dentist() {  
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = React.useMemo(
@@ -40,23 +37,14 @@ function Receptionist() {
       <ThemeProvider theme = {theme}>
         <Paper>
           <Typography variant="h2">[BranchName]</Typography>
-          <Navbar pageName={"RECEPTIONIST"} />
+          <Navbar pageName={"DENTIST"} />
           <Grid container id="Grid">
            <Grid direction="column" sm={12} md={6}>
-              <Grid item sm={12} md={6}>
-                <Paper elevation={3} sx={{m:3, height:'358px'}}>
-                  <Calendar/>
+                <Paper elevation={3} sx={{m:3, height:'782px'}}>
                 </Paper>
-              </Grid>
-              <Grid item sm={12} md={6}>
-                <Paper elevation={3} sx={{m:3, height:'400px'}}>
-                  <Appointments/>
-                </Paper>
-              </Grid>
            </Grid>
            <Grid direction="column" sm={12} md={6}>
               <Paper elevation={3} sx={{m:3, height:'782px'}}>
-                <Records/>
               </Paper>
            </Grid>
           </Grid>
@@ -66,4 +54,4 @@ function Receptionist() {
   );
 }
 
-export default Receptionist;
+export default Dentist;
