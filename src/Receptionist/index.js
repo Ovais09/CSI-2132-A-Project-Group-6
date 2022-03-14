@@ -5,12 +5,12 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
 import { Paper } from "@mui/material"
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import Calendar from './Calendar.js';
-import Navbar from './Navbar.js';
+import Calendar from '../Components/Calendar';
+import Navbar from '../Components/Navbar.js';
 import Appointments from './Appointments.js';
 import Records from './Records.js';
 
-function Patient() {  
+function Receptionist() {  
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = React.useMemo(
@@ -40,7 +40,7 @@ function Patient() {
       <ThemeProvider theme = {theme}>
         <Paper>
           <Typography variant="h2">[BranchName]</Typography>
-          <Navbar/>
+          <Navbar pageName={"RECEPTIONIST"} />
           <Grid container id="Grid">
            <Grid direction="column" sm={12} md={6}>
               <Grid item sm={12} md={6}>
@@ -66,4 +66,4 @@ function Patient() {
   );
 }
 
-export default Patient;
+export default Receptionist;

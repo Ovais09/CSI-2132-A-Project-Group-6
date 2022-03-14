@@ -5,9 +5,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
 import { Paper } from "@mui/material"
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import Calendar from './Calendar.js';
+import Calendar from '../Components/Calendar.js';
 import Profile from './UserProfile.js';
-import Navbar from './Navbar.js';
+import Navbar from '../Components/Navbar.js';
 import Appointments from './Appointments.js';
 import RecordsList from './RecordsList.js';
 import Rating from './Rating.js';
@@ -42,7 +42,7 @@ function Patient() {
       <ThemeProvider theme = {theme}>
         <Paper>
           <Typography variant="h2">[BranchName]</Typography>
-          <Navbar/>
+          <Navbar pageName={"PATIENT"} />
           <Grid container id="Grid">
             <Grid item sm={12} md={6}>
               <Paper elevation={3} sx={{m:3, height:'358px'}}>
