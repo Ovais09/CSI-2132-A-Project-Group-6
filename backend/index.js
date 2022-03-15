@@ -10,7 +10,7 @@ const con = mysql.createConnection({
     port: '3306',
     user: 'root',
     password: '',
-    database: ''
+    database: 'DentalClinic'
 });
 
 con.connect((err) => {
@@ -18,6 +18,25 @@ con.connect((err) => {
     console.log("Error connecting");
   } else {
     console.log("Connection established");
+  }
+});
+
+var sql = "INSERT INTO Branch (branch_id,city) VALUES (2,'hello')";
+
+con.query(sql, (err, result) => {
+  if (!err) {
+    console.log("Data inserted");
+  } else {
+    console.log(err.sqlMessage);
+  }
+});
+
+var sql = "SELECT * FROM Branch";
+con.query(sql, (err, result) => {
+  if (!err) {
+    console.log(JSON.parse(JSON.stringify(result)));
+  } else {
+    console.log('Error while performing Query.');
   }
 });
 
