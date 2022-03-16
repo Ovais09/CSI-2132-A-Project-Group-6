@@ -10,7 +10,7 @@ const con = mysql.createConnection({
     port: '3306',
     user: 'root',
     password: '',
-    database: 'DentalClinic'
+    database: 'DentalClinicDB'
 });
 
 con.connect((err) => {
@@ -21,7 +21,7 @@ con.connect((err) => {
   }
 });
 
-var sql = "INSERT INTO Branch (branch_id,city) VALUES (2,'hello')";
+var sql = "INSERT INTO Branch (branch_id,city) VALUES (1,'hello')";
 
 con.query(sql, (err, result) => {
   if (!err) {
