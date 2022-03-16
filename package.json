@@ -22,12 +22,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "preinstall": "cd backend",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "heroku-postbuild": "npm run build ./backend/",
+    "heroku-postbuild": "cd ../frontend && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
