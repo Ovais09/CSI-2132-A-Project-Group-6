@@ -1,4 +1,4 @@
-create DATABASE DentalClinic;
+create DATABASE DentalClinicDB;
 
 CREATE TABLE Person (
 	SSN INT NOT NULL PRIMARY KEY,
@@ -16,18 +16,19 @@ CREATE TABLE Person (
 );
 
 CREATE TABLE User (
-	user_id INT NOT NULL auto_increment PRIMARY KEY,
+	user_id INT NOT NULL auto_increment PRIMARY KEY, 
 	userName VARCHAR(15) NOT NULL,
 	SSN INT NOT NULL,
 	password VARCHAR(30) NOT NULL,
-	FOREIGN KEY (SSN) REFERENCES Person(SSN)
+	FOREIGN KEY (SSN) REFERENCES Person(SSN) ON DELETE CASCADE
 );
 
 CREATE TABLE Patient (
-	patient_id INT NOT NULL auto_increment PRIMARY KEY,
+	patient_id INT NOT NULL  PRIMARY KEY,
 	user_id INT NOT NULL,
 	insurance_company VARCHAR(15),
-	FOREIGN KEY (user_id) REFERENCES User(user_id)
+	FOREIGN KEY (user_id) REFERENCES User(user_id),
+	FOREIGN KEY (patient_id) REFERENCES Person(SSN) ON DELETE CASCADE
 );
 
 CREATE TABLE Branch (
@@ -36,17 +37,18 @@ CREATE TABLE Branch (
 );
 
 CREATE TABLE Employee (
-	employee_id INT NOT NULL auto_increment PRIMARY KEY,
-	branch_id INT NOT NULL,
-	manager_id INT,
-	salary DECIMAL(8,2) NOT NULL,
-	employee_type VARCHAR(15) NOT NULL,
-	employee_role VARCHAR(15) NOT NULL,
-	FOREIGN KEY (branch_id) REFERENCES Branch(branch_id),
-	FOREIGN KEY (manager_id) REFERENCES Employee(employee_id)
-);
-
-CREATE TABLE Review (
+     employee_id INT NOT NULL PRIMARY KEY,
+     branch_id INT NOT NULL,
+     manager_id INT,
+     salary DECIMAL(8,2) NOT NULL check(salary>=0),
+     employee_type VARCHAR(15) NOT NULL,
+     employee_role VARCHAR(15) NOT NULL,
+     FOREIGN KEY (branch_id) REFERENCES Branch(branch_id) on delete cascade,
+     FOREIGN KEY (manager_id) REFERENCES Employee(employee_id),
+     FOREIGN key (employee_id) REFERENCES person(SSN) on delete cascade
+ );
+ 
+ CREATE TABLE Review (
 	review_id INT NOT NULL auto_increment,
 	branch_id INT NOT NULL,
 	user_id INT NOT NULL,
@@ -54,9 +56,9 @@ CREATE TABLE Review (
 	communication INT check(communication BETWEEN 1 and 10),
 	cleanliness INT check(cleanliness BETWEEN 1 and 10),
 	employee_values INT check(employee_values between 1 and 10),
-	FOREIGN KEY (branch_id) REFERENCES Branch(branch_id),
-	FOREIGN KEY (user_id) REFERENCES User(user_id),
-    PRIMARY KEY (review_id, branch_id, user_id)
+	FOREIGN KEY (branch_id) REFERENCES Branch(branch_id) on delete cascade,
+	FOREIGN KEY (user_id) REFERENCES User(user_id) on delete cascade,
+    PRIMARY KEY (review_id, branch_id, user_id) 
 );
 
 CREATE TABLE Appointment (
@@ -69,18 +71,18 @@ CREATE TABLE Appointment (
 	start_time TIME(0) NOT NULL,
 	end_time TIME(0) NOT NULL,
 	room_assigned VARCHAR(15) NOT NULL,
-	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-	FOREIGN KEY (user_id) REFERENCES User(user_id),
+	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) on delete cascade,
+	FOREIGN KEY (user_id) REFERENCES User(user_id) on delete cascade,
     PRIMARY KEY (appointment_id, patient_id)
 );
 
 CREATE TABLE InsuranceClaim (
 	insurance_claim_id INT NOT NULL,
 	patient_id INT NOT NULL,
-    insurance_claim_amount Decimal(8,2) NOT NULL,
+    insurance_claim_amount Decimal(8,2) NOT NULL check (insurance_claim_amount>=0),
 	appointment_id INT NOT NULL,
-	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
+	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) on delete cascade,
+	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) on delete cascade,
     PRIMARY KEY (insurance_claim_id, patient_id, appointment_id)
 );
 
@@ -89,9 +91,9 @@ CREATE TABLE Invoice (
 	patient_id INT NOT NULL,
 	appointment_id INT NOT NULL,
 	insurance_claim_id INT,
-	patient_charge Decimal(8,2) NOT NULL,
-	insurance_charge Decimal(8,2) NOT NULL,
-	total_charge Decimal(8,2) NOT NULL,
+	patient_charge Decimal(8,2) NOT NULL check (patient_charge >=0),
+	insurance_charge Decimal(8,2) NOT NULL check (insurance_charge >=0),
+	total_charge Decimal(8,2) NOT NULL check (total_charge >=0),
 	date_of_issue DATE NOT NULL,
 	contact_name VARCHAR(15) NOT NULL,
 	phone_number VARCHAR(15) NOT NULL,
@@ -99,9 +101,9 @@ CREATE TABLE Invoice (
 	discount Decimal(8,2),
 	penalty Decimal(8,2),
 	insurance_company VARCHAR(15),
-	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-	FOREIGN KEY (insurance_claim_id) REFERENCES InsuranceClaim(insurance_claim_id),
+	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) on delete cascade,
+	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) on delete cascade,
+	FOREIGN KEY (insurance_claim_id) REFERENCES InsuranceClaim(insurance_claim_id) on delete cascade,
     PRIMARY KEY (invoice_id, patient_id, appointment_id)
 );
 
@@ -109,7 +111,7 @@ CREATE TABLE PatientRecords (
 	record_id INT NOT NULL,
 	patient_id INT NOT NULL,
 	records_date TIMESTAMP NOT NULL,
-	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
+	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) on delete cascade,
     PRIMARY KEY (record_id, patient_id)
 );
 
@@ -126,10 +128,10 @@ CREATE TABLE AppointmentProcedure (
 	medication VARCHAR(15) NOT NULL,
 	quantity INT NOT NULL,
     penalized BOOL NOT NULL,
-	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-	FOREIGN KEY (invoice_id) REFERENCES Invoice(invoice_id),
-	FOREIGN KEY (insurance_claim_id) REFERENCES InsuranceClaim(insurance_claim_id),
+	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) on delete cascade,
+	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) on delete cascade,
+	FOREIGN KEY (invoice_id) REFERENCES Invoice(invoice_id) on delete cascade,
+	FOREIGN KEY (insurance_claim_id) REFERENCES InsuranceClaim(insurance_claim_id) on delete cascade,
     PRIMARY KEY (procedure_id, patient_id, appointment_id, invoice_id)
 );
 
@@ -138,11 +140,11 @@ CREATE TABLE FeeCharge (
 	patient_id INT NOT NULL,
 	appointment_id INT NOT NULL,
 	procedure_id INT NOT NULL,
-	charge Decimal(8,2) NOT NULL,
+	charge Decimal(8,2) NOT NULL check (charge>=0),
 	fee_code VARCHAR(20) NOT NULL,
-	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-	FOREIGN KEY (procedure_id) REFERENCES AppointmentProcedure(procedure_id),
+	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) on delete cascade,
+	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) on delete cascade,
+	FOREIGN KEY (procedure_id) REFERENCES AppointmentProcedure(procedure_id) on delete cascade,
     PRIMARY KEY (fee_id, patient_id, appointment_id, procedure_id)
 );
 
@@ -152,13 +154,13 @@ CREATE TABLE PatientPayment (
 	patient_id INT NOT NULL,
 	appointment_id INT NOT NULL,
 	invoice_id INT NOT NULL,
-	patient_charge Decimal(8,2) NOT NULL,
-	insurance_charge Decimal(8,2),
-	total_charge Decimal(8,2) NOT NULL,
-	FOREIGN KEY (user_id) REFERENCES User(user_id),
-	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-	FOREIGN KEY (invoice_id) REFERENCES Invoice(invoice_id),
+	patient_charge Decimal(8,2) NOT NULL check(patient_charge>=0),
+	insurance_charge Decimal(8,2) check(insurance_charge>=0),
+	total_charge Decimal(8,2) NOT NULL check(total_charge>=0),
+	FOREIGN KEY (user_id) REFERENCES User(user_id) on delete cascade,
+	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) on delete cascade,
+	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) on delete cascade,
+	FOREIGN KEY (invoice_id) REFERENCES Invoice(invoice_id) on delete cascade,
     PRIMARY KEY (payment_id, invoice_id, patient_id, appointment_id)
 );
 
@@ -172,16 +174,16 @@ CREATE TABLE Treatment (
 	medication VARCHAR(15) NOT NULL,
 	quantity INT NOT NULL,
 	comments VARCHAR(250),
-	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-	FOREIGN KEY (record_id) REFERENCES PatientRecords(record_id),
+	FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) on delete cascade,
+	FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) on delete cascade,
+	FOREIGN KEY (record_id) REFERENCES PatientRecords(record_id) on delete cascade,
     PRIMARY KEY (treatment_id, patient_id, appointment_id)
 );
 
 CREATE Table Person_PhoneNumber(
 person_phonenumber VARCHAR(15) NOT NULL,
 SSN INT NOT NULL,
-FOREIGN KEY(SSN) REFERENCES Person(SSN),
+FOREIGN KEY(SSN) REFERENCES Person(SSN) on delete cascade,
 PRIMARY KEY(person_phonenumber, SSN)
 );
 
@@ -189,9 +191,9 @@ CREATE TABLE Appointment_EmployeeID(
     employee_id INT NOT NULL,
     appointment_id INT NOT NULL,
     patient_id INT NOT NULL,
-    FOREIGN KEY (employee_id) REFERENCES Employee(employee_id),
-    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
+    FOREIGN KEY (employee_id) REFERENCES Employee(employee_id) on delete cascade,
+    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) on delete cascade,
+    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) on delete cascade,
     PRIMARY KEY(employee_id, appointment_id, patient_id)
 );
 
@@ -199,9 +201,9 @@ CREATE TABLE Employee_PatientRecords(
     employee_id INT NOT NULL,
     record_id INT NOT NULL,
     patient_id INT NOT NULL,
-    FOREIGN KEY(employee_id) REFERENCES Employee(employee_id),
-    FOREIGN KEY(record_id) REFERENCES PatientRecords(record_id),
-    FOREIGN KEY(patient_id) REFERENCES Patient(patient_id),
+    FOREIGN KEY(employee_id) REFERENCES Employee(employee_id) on delete cascade,
+    FOREIGN KEY(record_id) REFERENCES PatientRecords(record_id) on delete cascade,
+    FOREIGN KEY(patient_id) REFERENCES Patient(patient_id) on delete cascade,
     PRIMARY KEY(employee_id, record_id, patient_id)
 );
 
@@ -211,10 +213,10 @@ CREATE TABLE PatientPayment_PaymentType(
     invoice_id INT NOT NULL,
     payment_id INT NOT NULL,
     payment_type INT NOT NULL,
-    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-    FOREIGN KEY(patient_id) REFERENCES Patient(patient_id),
-    FOREIGN KEY(invoice_id) REFERENCES Invoice(invoice_id),
-    FOREIGN KEY(payment_id) REFERENCES PatientPayment(payment_id),
+    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) on delete cascade,
+    FOREIGN KEY(patient_id) REFERENCES Patient(patient_id) on delete cascade,
+    FOREIGN KEY(invoice_id) REFERENCES Invoice(invoice_id) on delete cascade,
+    FOREIGN KEY(payment_id) REFERENCES PatientPayment(payment_id) on delete cascade,
     PRIMARY KEY (appointment_id, patient_id, invoice_id, payment_id, payment_type)
 );
 
@@ -224,11 +226,11 @@ CREATE TABLE PatientPayment_ProcedureID(
     invoice_id INT NOT NULL,
     payment_id INT NOT NULL,
     procedure_id INT NOT NULL,
-    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-    FOREIGN KEY(patient_id) REFERENCES Patient(patient_id),
-    FOREIGN KEY(invoice_id) REFERENCES Invoice(invoice_id),
-    FOREIGN KEY(payment_id) REFERENCES PatientPayment(payment_id),
-    FOREIGN KEY(procedure_id) REFERENCES AppointmentProcedure(procedure_id),
+    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) on delete cascade,
+    FOREIGN KEY(patient_id) REFERENCES Patient(patient_id) on delete cascade,
+    FOREIGN KEY(invoice_id) REFERENCES Invoice(invoice_id) on delete cascade,
+    FOREIGN KEY(payment_id) REFERENCES PatientPayment(payment_id) on delete cascade,
+    FOREIGN KEY(procedure_id) REFERENCES AppointmentProcedure(procedure_id) on delete cascade,
     PRIMARY KEY (appointment_id, patient_id, invoice_id, payment_id, procedure_id)
 );
 
@@ -237,9 +239,9 @@ CREATE TABLE Treatment_Symptoms(
     patient_id INT NOT NULL,
     treatment_id INT NOT NULL,
     symptom varchar(250),
-    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-    FOREIGN KEY(patient_id) REFERENCES Patient(patient_id),
-    FOREIGN KEY(treatment_id) REFERENCES Treatment(treatment_id),
+    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) on delete cascade,
+    FOREIGN KEY(patient_id) REFERENCES Patient(patient_id) on delete cascade,
+    FOREIGN KEY(treatment_id) REFERENCES Treatment(treatment_id) on delete cascade,
     PRIMARY KEY(appointment_id, patient_id, treatment_id, symptom)
 );
 
@@ -248,8 +250,8 @@ CREATE TABLE Treatment_Teeth(
     patient_id INT NOT NULL,
     treatment_id INT NOT NULL,
     teeth varchar(50),
-    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
-    FOREIGN KEY(patient_id) REFERENCES Patient(patient_id),
-    FOREIGN KEY(treatment_id) REFERENCES Treatment(treatment_id),
+    FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id) on delete cascade,
+    FOREIGN KEY(patient_id) REFERENCES Patient(patient_id) on delete cascade,
+    FOREIGN KEY(treatment_id) REFERENCES Treatment(treatment_id) on delete cascade,
     PRIMARY KEY(appointment_id, patient_id, treatment_id, teeth)
 );
