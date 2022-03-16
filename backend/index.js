@@ -20,13 +20,13 @@ const pool = mysql.createPool({
     database: 'heroku_18cb672458b367b'
 });
 
-pool.connect((err) => {
-  if (err) {
-    console.log("Error connecting");
-  } else {
-    console.log("Connection established");
-  }
-});
+// pool.connect((err) => {
+//   if (err) {
+//     console.log("Error connecting");
+//   } else {
+//     console.log("Connection established");
+//   }
+// });
 
 
 var sql = "SELECT * FROM Branch";
