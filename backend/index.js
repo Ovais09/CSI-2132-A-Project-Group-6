@@ -9,12 +9,14 @@ const port = process.env.PORT || 3000;
 
 
 // Create connection
+
+//mysql://b86ffdd79fbc66:273045b6@us-cdbr-east-05.cleardb.net/heroku_18cb672458b367b?reconnect=true
 const con = mysql.createConnection({
-    host: '127.0.0.1',
+    host: 'us-cdbr-east-05.cleardb.net',
     port: '3306',
-    user: 'root',
-    password: '',
-    database: 'DentalClinicDB'
+    user: 'b86ffdd79fbc66',
+    password: '273045b6',
+    database: 'heroku_18cb672458b367b'
 });
 
 con.connect((err) => {
@@ -25,7 +27,6 @@ con.connect((err) => {
   }
 });
 
-var sql = "INSERT INTO Branch (branch_id,city) VALUES (1,'hello')";
 
 con.query(sql, (err, result) => {
   if (!err) {
