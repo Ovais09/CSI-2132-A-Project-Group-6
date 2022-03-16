@@ -1,4 +1,4 @@
-create DATABASE DentalClinicDB;
+create DATABASE heroku_18cb672458b367b;
 
 CREATE TABLE Person (
 	SSN INT NOT NULL PRIMARY KEY,
