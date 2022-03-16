@@ -3,6 +3,10 @@ const mysql = require('mysql');
 const path = require('path');
 const app = express();
 
+//# use alternate localhost and the port Heroku assigns to $PORT
+const host = '0.0.0.0';
+const port = process.env.PORT || 3000;
+
 
 // Create connection
 const con = mysql.createConnection({
@@ -50,6 +54,6 @@ app.get("/", (req, res) => {
 });
 
 
-app.listen(3000, () => {
-    console.log('Server started on port 3000');
+app.listen(port,host, () => {
+    console.log(`Server started on port ${port}`);
 });
