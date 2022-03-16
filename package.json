@@ -26,6 +26,7 @@
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "heroku-postbuild": "npm run build ./backend/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
