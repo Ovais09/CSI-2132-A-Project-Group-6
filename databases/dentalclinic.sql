@@ -93,7 +93,7 @@ CREATE TABLE Invoice (
 	insurance_claim_id INT,
 	patient_charge Decimal(8,2) NOT NULL check (patient_charge >=0),
 	insurance_charge Decimal(8,2) NOT NULL check (insurance_charge >=0),
-	total_charge Decimal(8,2) NOT NULL check (insurance_charge >=0),
+	total_charge Decimal(8,2) NOT NULL check (total_charge >=0),
 	date_of_issue DATE NOT NULL,
 	contact_name VARCHAR(15) NOT NULL,
 	phone_number VARCHAR(15) NOT NULL,
