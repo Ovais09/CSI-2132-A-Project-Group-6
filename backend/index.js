@@ -28,14 +28,6 @@ con.connect((err) => {
 });
 
 
-con.query(sql, (err, result) => {
-  if (!err) {
-    console.log("Data inserted");
-  } else {
-    console.log(err.sqlMessage);
-  }
-});
-
 var sql = "SELECT * FROM Branch";
 con.query(sql, (err, result) => {
   if (!err) {
