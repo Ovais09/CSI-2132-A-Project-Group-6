@@ -11,7 +11,8 @@ const port = process.env.PORT || 3000;
 // Create connection
 
 //mysql://b86ffdd79fbc66:273045b6@us-cdbr-east-05.cleardb.net/heroku_18cb672458b367b?reconnect=true
-const con = mysql.createConnection({
+const pool = mysql.createPool({
+    connectionLimit: 10,
     host: 'us-cdbr-east-05.cleardb.net',
     port: '3306',
     user: 'b86ffdd79fbc66',
@@ -19,7 +20,7 @@ const con = mysql.createConnection({
     database: 'heroku_18cb672458b367b'
 });
 
-con.connect((err) => {
+pool.connect((err) => {
   if (err) {
     console.log("Error connecting");
   } else {
@@ -29,7 +30,7 @@ con.connect((err) => {
 
 
 var sql = "SELECT * FROM Branch";
-con.query(sql, (err, result) => {
+pool.query(sql, (err, result) => {
   if (!err) {
     console.log(JSON.parse(JSON.stringify(result)));
   } else {
