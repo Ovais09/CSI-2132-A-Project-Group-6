@@ -25,7 +25,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
-    "heroku-postbuild": "cd ../frontend && npm run build",
+    "heroku-postbuild": "cd frontend && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
