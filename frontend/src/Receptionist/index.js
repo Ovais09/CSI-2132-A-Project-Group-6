@@ -10,7 +10,7 @@ import Navbar from '../Components/Navbar.js';
 import Appointments from './Appointments.js';
 import Records from '../Components/Records.js'
 
-function Receptionist() {  
+function Receptionist({branchName}) {  
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = React.useMemo(
@@ -39,7 +39,7 @@ function Receptionist() {
     <div className="Patient">
       <ThemeProvider theme = {theme}>
         <Paper>
-          <Typography variant="h2">[BranchName]</Typography>
+          <Typography variant="h2">branchName</Typography>
           <Navbar pageName={"RECEPTIONIST"} />
           <Grid container id="Grid">
            <Grid direction="column" sm={12} md={6}>
