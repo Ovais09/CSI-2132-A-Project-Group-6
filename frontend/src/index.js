@@ -16,6 +16,7 @@ ReactDOM.render(
       <Dentist />
       <Patient />
     </div>
+    <div>Test stuff </div>
   </React.StrictMode>,
   document.getElementById('root')
 );
