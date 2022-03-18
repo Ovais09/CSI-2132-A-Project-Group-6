@@ -1,6 +1,9 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Typography from '@mui/material/Typography';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import { CardActionArea } from '@mui/material';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 40 },
@@ -43,23 +46,42 @@ const rows = [
   { id: 9, treatmentType: 'Roxie', appointmentType: 'Harvey', medication: 65, comments: 'blablabla'  },
 ];
 
-export default function DataGridDemo() {
+export default function Records() {
+  const [show, setShow] = React.useState(false);
+  const [height, setheight] = React.useState('100%');
 
   function handleClick () {
-    console.log('h');
+      setShow(!show);
+      if (show){
+        setheight('100%');
+      }
+      else{
+        setheight('20%');
+      }
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
-      <Typography variant="h4" align="left" sx={{ p: 3 }}>Records</Typography>
-      <DataGrid 
-        sx={{ bgcolor: 'background.paper', m: 1 }}
-        rows={rows}
-        columns={columns}
-        pageSize={15}
-        rowsPerPageOptions={[15]}
-        onRowClick={handleClick}
-      />
+      <CardActionArea sx={{ height: height, display: 'flex', flexDirection: 'column' }} onClick={handleClick}>
+          <CardMedia >
+            <Typography variant="h4" align="left">Medical Records</Typography>
+          </CardMedia>
+      </CardActionArea>
+      {show ? (
+          <CardContent sx={{ width:'100%', height: '100%', p:0 }}>
+              <DataGrid 
+              sx={{ bgcolor: 'background.paper', m: 1 }}
+              rows={rows}
+              columns={columns}
+              pageSize={15}
+              rowsPerPageOptions={[15]}
+              onRowClick={handleClick}
+              components={{
+                Toolbar: GridToolbar,
+              }}
+            />
+          </CardContent>
+      ) : null}
     </div>
   );
 }

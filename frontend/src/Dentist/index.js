@@ -7,7 +7,7 @@ import { Paper } from "@mui/material"
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Navbar from '../Components/Navbar';
 import Appointments from '../Receptionist/Appointments.js'
-import RecordsList from '../Patient/RecordsList.js'
+import Records from '../Components/Records.js'
 
 function Dentist() {  
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -48,7 +48,7 @@ function Dentist() {
            </Grid>
            <Grid direction="column" sm={12} md={6}>
               <Paper elevation={3} sx={{m:3, height:'782px'}}>
-                <RecordsList />
+                <Records />
               </Paper>
            </Grid>
           </Grid>

@@ -8,7 +8,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Calendar from '../Components/Calendar';
 import Navbar from '../Components/Navbar.js';
 import Appointments from './Appointments.js';
-import Records from './Records.js';
+import Records from '../Components/Records.js'
 
 function Receptionist() {  
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');

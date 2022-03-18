@@ -11,6 +11,7 @@ import { CardActionArea } from '@mui/material';
 
 function PatientProfile() {
     const [show, setShow] = React.useState(false);
+    const [width, setWidth] = React.useState(12);
     function stringToColor(string) {
         let hash = 0;
         let i;
@@ -43,10 +44,16 @@ function PatientProfile() {
     }
     function handleClick () {
         setShow(!show);
+        if (show){
+            setWidth(12);
+        }
+        else{
+            setWidth(6);
+        }
     }
   return (
-    <CardActionArea sx={{ height:'100%' }} onClick={handleClick}>
-        <CardMedia>
+    <CardActionArea sx={{ height:'100%', display: 'flex', flexDirection: 'row' }} onClick={handleClick}>
+        <CardMedia sx={{width: '50%'}}>
             <Grid container id="Grid" justifyContent="space-evenly">
                 <Grid item id="GridItem" sx={{ p: 2 }}>
                     <Avatar {...stringAvatar('Firstname Lastname')}/>
@@ -58,22 +65,22 @@ function PatientProfile() {
             </Grid>
         </CardMedia>
         {show ? (
-            <CardContent>
-                <Grid container rowSpacing={1}>
-                    <Grid item xs={6} sx={{ p: 2 }}>
+            <CardContent sx={{ width:'50%', p:0 }}>
+                <Grid container rowSpacing={2}>
+                    <Grid item xs={12} sx={{ p: 2 }}>
                         <Typography variant="caption" color="text.secondary">Age</Typography>
                         <Typography variant="subtitle2">[age] years</Typography>
                     </Grid>
-                    <Grid item xs={6} sx={{ p: 2 }}>
+                    <Grid item xs={12} sx={{ p: 2 }}>
                         <Typography variant="caption" color="text.secondary">Date Of Birth</Typography>
                         <Typography variant="subtitle2">[YYYY-MM-DD]</Typography>
                     </Grid>
-                    <Grid item xs={6} sx={{ p: 2 }}>
+                    <Grid item xs={12} sx={{ p: 2 }}>
                         <Typography variant="caption" color="text.secondary">Contact</Typography>
                         <Typography variant="subtitle2">[XXX-XXX-XXXX]</Typography>
                         <Typography variant="subtitle2">[XXXXXX@XXXXXX.XX]</Typography>
                     </Grid>
-                    <Grid item xs={6} sx={{ p: 2 }}>
+                    <Grid item xs={12} sx={{ p: 2 }}>
                         <Typography variant="caption" color="text.secondary">Address</Typography>
                         <Typography variant="subtitle2">[full address]</Typography>
                     </Grid>
