@@ -2,9 +2,10 @@ body {
   margin: 0;
 }
 
-.Patient {
+.Patient, .Dentist, .Login {
   text-align: center;
 }
+
 
 #Menu {
   position: fixed;

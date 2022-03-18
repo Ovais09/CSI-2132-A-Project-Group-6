@@ -12,7 +12,7 @@ import Appointments from './Appointments.js';
 import RecordsList from './RecordsList.js';
 import Rating from '../Components/Rating.js';
 
-function Patient() {  
+function Patient({branchName}) {  
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = React.useMemo(
@@ -41,7 +41,7 @@ function Patient() {
     <div className="Patient">
       <ThemeProvider theme = {theme}>
         <Paper>
-          <Typography variant="h2">[BranchName]</Typography>
+          <Typography variant="h2">branchName</Typography>
           <Navbar pageName={"PATIENT"} />
           <Grid container id="Grid">
             <Grid item sm={12} md={6}>

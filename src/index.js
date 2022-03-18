@@ -4,6 +4,7 @@ import Patient from './Patient';
 import Receptionist from './Receptionist';
 import '@fontsource/roboto/300.css';
 import Dentist from './Dentist';
+import Login from './LogIn';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -12,9 +13,10 @@ ReactDOM.render(
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
     </head>
     <div className="App">
-      <Receptionist />
-      <Dentist />
-      <Patient />
+      <Login />
+      <Receptionist branchName="Sample Branch" />
+      <Dentist branchName="Sample Branch" />
+      <Patient branchName="Sample Branch" />
     </div>
   </React.StrictMode>,
   document.getElementById('root')
