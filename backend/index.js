@@ -47,6 +47,11 @@ app.get("/", (req, res) => {
   res.sendFile(path.join("../frontend", "build", "index.html"));
 });
 
+app.post("/handle", (req, res) => {
+  //REPLACE SAMPLE JSON BELOW WITH USER INFO(INCLUDING USER TYPE)
+  res.send({ branch_id: 1, city: 'hello' });
+});
+
 
 app.listen(port,host, () => {
     console.log(`Server started on port ${port}`);

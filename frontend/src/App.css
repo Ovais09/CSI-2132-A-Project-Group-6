@@ -6,6 +6,10 @@ body {
   text-align: center;
 }
 
+#logInButton, #logInHeader {
+  margin: 10% auto 5% auto;
+}
+
 
 #Menu {
   position: fixed;
