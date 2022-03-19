@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/handle", (req, res) => {
-<<<<<<< HEAD
+
   var sql = "SELECT * FROM User";
   pool.query(sql, (err, result) => {
     if (!err) {
@@ -51,20 +51,18 @@ app.post("/handle", (req, res) => {
       console.log("Error while performing Query.");
     }
   });
-=======
-  //REPLACE SAMPLE JSON BELOW WITH USER INFO(INCLUDING USER TYPE)
-  res.send({ branch_id: 1, city: 'hello' });
-});
-
->>>>>>> e2996d2706a34f303c2a649a876967996fdffa04
-
-
-
-
-
-
 
 });
+
+
+
+
+
+
+
+
+
+
 
 app.listen(port, host, () => {
   console.log(`Server started on port ${port}`);
