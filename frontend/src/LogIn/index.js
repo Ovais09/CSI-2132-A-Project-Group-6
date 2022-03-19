@@ -3,17 +3,21 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Input from '@mui/material/Input';
 import { Button, Paper, TextField } from "@mui/material"
 import { Grid } from '@mui/material';
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import Receptionist from "../Receptionist";
+import Dentist from "../Dentist";
+import Patient from "../Patient";
 
 function Login() {
   const [values, setValues] = React.useState({
     username: '',
     password: '',
-    showPassword: false,
+    logIn: true,
+    receptionist: false,
+    dentist: false,
+    patient: false,
   });
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -45,33 +49,35 @@ function Login() {
     setValues({ ...values, [prop]: event.target.value });
   };
 
-  const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
   const getUserInfo = () => {
     fetch('http://localhost:3000/handle', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify({ username: values.username, password: values.password })
+    }).then(res => {
+      if(res.ok){
+        return res.json();
+      }
+      throw res;
+    }).then(data => {
+      console.log(data);
+      
+      //BASED ON DATA RESPONSE RENDER PAGE BASED ON USER TYPE
+      //BELOW IS AN EXAMPLE OF HOW TO SWITCH PAGES(IN THIS CASE FROM LOGIN TO RECEPTIONIST)
+      setValues({ ...values, receptionist: true, logIn: false })
     });
   }
   
   return (
     <div className="Login" style={{ height:'100%'}}>
+      {values.logIn &&
       <ThemeProvider theme = {theme}>
         <Paper>
-          <Typography variant="h2">Login</Typography>
+          <Typography id="logInHeader" variant="h2">Login</Typography>
           
         <FormControl variant="standard">
           <Grid container >
+            <Grid item direction="column" sm={12} md={12}>
               <Grid item direction="row" sm={12} md={6}>
                 <TextField
                   required
@@ -81,13 +87,6 @@ function Login() {
                   onChange={handleChange('username')}
                   variant="filled"
                 />
-                {/* <Input
-                
-                  id="username"
-                  type='text'
-                  value={values.username}
-                  onChange={handleChange('username')}
-                /> */}
               </Grid>
               <Grid item direction="row" sm={12} md={6}>
                 <TextField 
@@ -98,14 +97,27 @@ function Login() {
                 onChange={handleChange('password')}  />
                 
             </Grid>
+            </Grid>
+            <Grid item direction="column" sm={12} md={12}>
             <Button 
+              id="logInButton"
               variant="contained"
               onClick={getUserInfo}
             >LOGIN</Button>
+            </Grid>
           </Grid>
         </FormControl>
         </Paper>
-      </ThemeProvider>
+      </ThemeProvider>}
+      {values.receptionist && 
+      <Receptionist />
+      }
+      {values.dentist && 
+      <Dentist />
+      }
+      {values.patient && 
+      <Patient />
+      }
     </div>
   );
 }
