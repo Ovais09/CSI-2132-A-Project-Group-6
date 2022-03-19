@@ -14,9 +14,9 @@ ReactDOM.render(
     </head>
     <div className="App">
       <Login />
-      <Receptionist branchName="Sample Branch" />
+      {/* <Receptionist branchName="Sample Branch" />
       <Dentist branchName="Sample Branch" />
-      <Patient branchName="Sample Branch" />
+      <Patient branchName="Sample Branch" /> */}
     </div>
   </React.StrictMode>,
   document.getElementById('root')

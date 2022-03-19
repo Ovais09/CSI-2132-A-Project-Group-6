@@ -9,7 +9,7 @@ import { Button, Paper, TextField } from "@mui/material"
 import { Grid } from '@mui/material';
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-function Login() {  
+function Login() {
   const [values, setValues] = React.useState({
     username: '',
     password: '',
@@ -55,33 +55,56 @@ function Login() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const getUserInfo = () => {
+    fetch('http://localhost:3000/handle', {
+      method: "POST",
+      headers: {  'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: values.username, password: values.password })
+    });
+  }
   
   return (
-    <div className="Login">
+    <div className="Login" style={{ height:'100%'}}>
       <ThemeProvider theme = {theme}>
+        <Paper>
           <Typography variant="h2">Login</Typography>
           
         <FormControl variant="standard">
-          {/* <TextField required id="username" label="username" variant="standard" /> */}
           <Grid container >
               <Grid item direction="row" sm={12} md={6}>
-                <InputLabel htmlFor="username">Username</InputLabel>
-                <Input
+                <TextField
+                  required
+                  id="username"
+                  label="Username"
+                  value={values.username}
+                  onChange={handleChange('username')}
+                  variant="filled"
+                />
+                {/* <Input
+                
                   id="username"
                   type='text'
                   value={values.username}
                   onChange={handleChange('username')}
-                />
+                /> */}
               </Grid>
               <Grid item direction="row" sm={12} md={6}>
-                <TextField required id="password" label="Password" variant="standard" type="password" onChange={handleChange('password')}  />
+                <TextField 
+                required id="password" 
+                label="Password" 
+                variant="filled" 
+                type="password" 
+                onChange={handleChange('password')}  />
                 
             </Grid>
-            <Button variant="contained">Contained</Button>
+            <Button 
+              variant="contained"
+              onClick={getUserInfo}
+            >LOGIN</Button>
           </Grid>
         </FormControl>
-
-          
+        </Paper>
       </ThemeProvider>
     </div>
   );

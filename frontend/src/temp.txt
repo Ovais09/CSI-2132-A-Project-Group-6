@@ -1,0 +1,5 @@
+username password -> user table
+user table -> snn -> ids
+if ssn= 12345 
+patientId u12345
+employeeId e12345
