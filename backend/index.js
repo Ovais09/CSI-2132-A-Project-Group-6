@@ -45,7 +45,13 @@ app.post("/handle", (req, res) => {
       console.log(result);
       console.log(JSON.parse(JSON.stringify(result))[0].userName);
       if (req.body.username == JSON.parse(JSON.stringify(result))[0].userName && req.body.password == JSON.parse(JSON.stringify(result))[0].password) {
-        console.log("jsdhgiujwgnwjkAGN")
+        res.send(JSON.stringify({
+          success: true,
+          message: "Login Successful",
+          patient: true,
+          receptionist: false,
+          dentist: false
+        }));
       } 
     } else {
       console.log("Error while performing Query.");

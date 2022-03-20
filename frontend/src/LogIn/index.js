@@ -64,7 +64,7 @@ function Login() {
       
       //BASED ON DATA RESPONSE RENDER PAGE BASED ON USER TYPE
       //BELOW IS AN EXAMPLE OF HOW TO SWITCH PAGES(IN THIS CASE FROM LOGIN TO RECEPTIONIST)
-      setValues({ ...values, receptionist: true, logIn: false })
+      setValues({ ...values, receptionist: data.receptionist, logIn: false, dentist: data.dentist, patient: data.patient });
     });
   }
   
