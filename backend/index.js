@@ -39,12 +39,16 @@ app.get("/", (req, res) => {
 
 app.post("/handle", (req, res) => {
 
-  var sql = "SELECT * FROM User";
+  var sql = "SELECT * FROM User WHERE userName = '" + req.body.username + "' AND password = '" + req.body.password + "'";
   pool.query(sql, (err, result) => {
     if (!err) {
-      console.log(result);
-      console.log(JSON.parse(JSON.stringify(result))[0].userName);
-      if (req.body.username == JSON.parse(JSON.stringify(result))[0].userName && req.body.password == JSON.parse(JSON.stringify(result))[0].password) {
+      var resultQuery = JSON.parse(JSON.stringify(result))
+      console.log(resultQuery);
+      console.log(req.body.username);
+      console.log(req.body.password);
+      console.log(req.body.role);
+      if (req.body.role == "patient" && req.body.username == resultQuery[0].userName && req.body.password == resultQuery[0].password) {
+        console.log("Success for patient");
         res.send(JSON.stringify({
           success: true,
           message: "Login Successful",
@@ -53,6 +57,28 @@ app.post("/handle", (req, res) => {
           dentist: false
         }));
       } 
+
+      else if (req.body.role == "dentist" && req.body.username == resultQuery[0].userName && req.body.password == resultQuery[0].password) {
+        console.log("Success for dentist");
+        res.send(JSON.stringify({
+          success: true,
+          message: "Login Successful",
+          patient: false,
+          receptionist: false,
+          dentist: true
+        }));
+      }
+
+      else if (req.body.role == "receptionist" && req.body.username == resultQuery[0].userName && req.body.password == resultQuery[0].password) {
+        console.log("Success for receptionist");
+        res.send(JSON.stringify({
+          success: true,
+          message: "Login Successful",
+          patient: false,
+          receptionist: true,
+          dentist: false
+        }));
+      }
     } else {
       console.log("Error while performing Query.");
     }

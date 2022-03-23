@@ -15,6 +15,9 @@ function Login() {
     username: '',
     password: '',
     role: '',
+    receptionist: false,
+    dentist: false,
+    patient: false,
     loggedIn: false,
   });
 
@@ -52,7 +55,7 @@ function Login() {
     fetch('http://localhost:3000/handle', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: values.username, password: values.password })
+      body: JSON.stringify({ username: values.username, password: values.password, role: values.role })
     }).then(res => {
       if(res.ok){
         return res.json();
@@ -63,7 +66,7 @@ function Login() {
       
       //BASED ON DATA RESPONSE RENDER PAGE BASED ON USER TYPE
       //BELOW IS AN EXAMPLE OF HOW TO SWITCH PAGES(IN THIS CASE FROM LOGIN TO RECEPTIONIST)
-      setValues({ ...values, loggedIn: true });
+      setValues({ ...values, loggedIn: true, receptionist: data.receptionist, dentist: data.dentist, patient: data.patient });
     });
   }
   
@@ -122,13 +125,13 @@ function Login() {
         </FormControl>
         </Paper>
       </ThemeProvider>}
-      {values.role === 'receptionist' && values.loggedIn &&
+      {values.role === 'receptionist' && values.loggedIn && values.receptionist && 
       <Receptionist />
       }
-      {values.role === 'dentist' && values.loggedIn &&
+      {values.role === 'dentist' && values.loggedIn && values.dentist && 
       <Dentist />
       }
-      {values.role === 'patient' && values.loggedIn &&
+      {values.role === 'patient' && values.loggedIn && values.patient &&
       <Patient />
       }
     </div>
