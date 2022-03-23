@@ -3,7 +3,7 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import FormControl from '@mui/material/FormControl';
-import { Button, Paper, TextField } from "@mui/material"
+import { Button, Paper, TextField, InputLabel, Select, MenuItem } from "@mui/material"
 import { Grid } from '@mui/material';
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Receptionist from "../Receptionist";
@@ -14,10 +14,8 @@ function Login() {
   const [values, setValues] = React.useState({
     username: '',
     password: '',
-    logIn: true,
-    receptionist: false,
-    dentist: false,
-    patient: false,
+    role: '',
+    loggedIn: false,
   });
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -50,6 +48,7 @@ function Login() {
   };
 
   const getUserInfo = () => {
+    setValues({ ...values, loggedIn: true });
     fetch('http://localhost:3000/handle', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
@@ -64,13 +63,13 @@ function Login() {
       
       //BASED ON DATA RESPONSE RENDER PAGE BASED ON USER TYPE
       //BELOW IS AN EXAMPLE OF HOW TO SWITCH PAGES(IN THIS CASE FROM LOGIN TO RECEPTIONIST)
-      setValues({ ...values, receptionist: data.receptionist, logIn: false, dentist: data.dentist, patient: data.patient });
+      setValues({ ...values, loggedIn: true });
     });
   }
   
   return (
     <div className="Login" style={{ height:'100%'}}>
-      {values.logIn &&
+      {(values.role === '' || !values.loggedIn) &&
       <ThemeProvider theme = {theme}>
         <Paper>
           <Typography id="logInHeader" variant="h2">Login</Typography>
@@ -78,7 +77,7 @@ function Login() {
         <FormControl variant="standard">
           <Grid container >
             <Grid item direction="column" sm={12} md={12}>
-              <Grid item direction="row" sm={12} md={6}>
+              <Grid item direction="row" sm={12} md={4}>
                 <TextField
                   required
                   id="username"
@@ -88,7 +87,7 @@ function Login() {
                   variant="filled"
                 />
               </Grid>
-              <Grid item direction="row" sm={12} md={6}>
+              <Grid item direction="row" sm={12} md={4}>
                 <TextField 
                 required id="password" 
                 label="Password" 
@@ -96,7 +95,21 @@ function Login() {
                 type="password" 
                 onChange={handleChange('password')}  />
                 
-            </Grid>
+              </Grid>
+              <Grid item direction="row" sm={12} md={4}>
+                {/* <InputLabel id="role-label">Role</InputLabel> */}
+                <Select
+                  labelId="role-label"
+                  id="role"
+                  value={values.role}
+                  label="Role"
+                  onChange={handleChange('role')}
+                >
+                  <MenuItem value={"receptionist"}>Receptionist</MenuItem>
+                  <MenuItem value={"dentist"}>Dentist</MenuItem>
+                  <MenuItem value={"patient"}>Patient</MenuItem>
+                </Select>
+              </Grid>
             </Grid>
             <Grid item direction="column" sm={12} md={12}>
             <Button 
@@ -109,13 +122,13 @@ function Login() {
         </FormControl>
         </Paper>
       </ThemeProvider>}
-      {values.receptionist && 
+      {values.role === 'receptionist' && values.loggedIn &&
       <Receptionist />
       }
-      {values.dentist && 
+      {values.role === 'dentist' && values.loggedIn &&
       <Dentist />
       }
-      {values.patient && 
+      {values.role === 'patient' && values.loggedIn &&
       <Patient />
       }
     </div>
