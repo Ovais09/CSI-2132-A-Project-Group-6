@@ -1,6 +1,9 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 40 },
@@ -49,7 +52,15 @@ const rows2 = [
 ];
 const rows = [rows1, rows2];
 
-export default function DataGridDemo(props) {
+export default function ApptList(props) {
+  const [open, setOpen] = React.useState(false);
+  const [selectedUser, setSelectedUser] = React.useState(0);
+  const handleClose = () => setOpen(false);
+
+  function handleRowClicked (row) {
+    setSelectedUser(row.id-1);
+    setOpen(true);
+  }
 
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -59,8 +70,32 @@ export default function DataGridDemo(props) {
         pageSize={5}
         rowsPerPageOptions={[5]}
         checkboxSelection
-        disableSelectionOnClick
+        onRowClick={handleRowClicked}
+        editMode="row"
+        components={{
+          Toolbar: GridToolbar,
+        }}
       />
+      <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      open={open}
+      onClose={handleClose}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+    >
+      <Fade in={open}>
+        <Box sx={style}>
+          <Typography id="transition-modal-title" variant="h6" component="h2">
+            {rows[selectedUser].firstName} {rows[selectedUser].lastName} [include all user info] [will be editable]
+          </Typography>
+          aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        </Box>
+      </Fade>
+    </Modal>
     </div>
   );
 }

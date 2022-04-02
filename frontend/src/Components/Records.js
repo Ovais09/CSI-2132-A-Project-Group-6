@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridToolbar, getSelectedRows  } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';

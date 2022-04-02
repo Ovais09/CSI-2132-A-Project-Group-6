@@ -47,9 +47,11 @@ app.post("/handle", (req, res) => {
       console.log(req.body.username);
       console.log(req.body.password);
       console.log(req.body.role);
+      console.log(resultQuery[0].user_id);
       if (req.body.role == "patient" && req.body.username == resultQuery[0].userName && req.body.password == resultQuery[0].password) {
         console.log("Success for patient");
         res.send(JSON.stringify({
+          userID: resultQuery[0].user_id,
           success: true,
           message: "Login Successful",
           patient: true,
@@ -86,6 +88,41 @@ app.post("/handle", (req, res) => {
 
 });
 
+
+app.post("/handleProfile", (req, res) => {
+
+  var user_ssn = "SELECT SSN FROM User WHERE user_id = " + req.body.user_id;
+  var person = "";
+  pool.query(user_ssn, (err, result) => {
+    if (!err) {
+      var resultQuery = JSON.parse(JSON.stringify(result))
+      console.log(resultQuery);
+      console.log("Success for SSN");
+      person = "SELECT * FROM Person WHERE SSN = '" + resultQuery[0].SSN + "'";
+/* 223456789 */
+      pool.query(person, (err, result) => {
+        if (!err) {
+          var resultQuery = JSON.parse(JSON.stringify(result))
+          console.log(resultQuery);
+          console.log("Success for Person");
+    
+          res.send(JSON.stringify({
+            name: resultQuery[0].first_name + " " + resultQuery[0].middle_name + " " + resultQuery[0].last_name,
+            age: 'aaa',
+            DOB: resultQuery[0].date_of_birth,
+            contact: resultQuery[0].phone_number + "\n" + resultQuery[0].email_address,
+            address: resultQuery[0].house_number + " " + resultQuery[0].street + ", " + resultQuery[0].city + ", " + resultQuery[0].province
+          }));
+        } else {
+          console.log("Error while performing Person Query.");
+        }
+      });
+
+    } else {
+      console.log("Error while performing SSN Query.");
+    }
+  });
+});
 
 
 

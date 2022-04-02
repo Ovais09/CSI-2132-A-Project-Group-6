@@ -7,8 +7,37 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar  } from '@mui/x-data-grid';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+import Backdrop from '@mui/material/Backdrop';
 
+import AppointmentsForm from './AppointmentsForm';
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
 
 function a11yProps(index) {
   return {
@@ -17,9 +46,16 @@ function a11yProps(index) {
   };
 }
 
-export default function FullWidthTabs() {
+export default function Appointments() {
+  const [open, setOpen] = React.useState(false);
+  const [selectedUser, setSelectedUser] = React.useState(0);
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+  const [dentist, setDentist] = React.useState('');
+  
+  const handleClose = () => {
+    setOpen(false);
+  }
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -68,10 +104,29 @@ export default function FullWidthTabs() {
     { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
     { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
   ];
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '600px',
+    height: '60vh',
+    bgcolor: 'background.paper',
+    color: 'white',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
+  function handleClick (row) {
+    setSelectedUser(row.id-1);
+    setOpen(true);
+  }  
 
   return (
     <Box>
-      <Typography variant="h4" align="left" sx={{ p: 3 }}>Appointments</Typography>
+      <Typography variant="h4" align="center" sx={{ p: 3, display: 'flex', justifyContent: 'space-evenly', }}>Appointments <AppointmentsForm/></Typography>
+      
       <AppBar position="static">
         <Tabs
           value={value}
@@ -86,30 +141,58 @@ export default function FullWidthTabs() {
         </Tabs>
       </AppBar>
       <SwipeableViews axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'} index={value}
- onChangeIndex={handleChangeIndex} id='aaaa'>
+ onChangeIndex={handleChangeIndex}>
         <div style={{ height: '262px'}}>
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
+          <div index={0} style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
             <DataGrid
               sx={{ bgcolor: 'background.paper', m: 1 }}
               rows={rows1}
               columns={columns}
               pageSize={15}
               rowsPerPageOptions={[15]}
+              onRowClick={handleClick}
+              editMode="row"
+              components={{
+                Toolbar: GridToolbar,
+              }}
             />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
+          <div index={1} style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
             <DataGrid
               sx={{ bgcolor: 'background.paper', m: 1 }}
               rows={rows2}
               columns={columns}
               pageSize={15}
               rowsPerPageOptions={[15]}
+              onRowClick={handleClick}
+              editMode="row"
+              components={{
+                Toolbar: GridToolbar,
+              }}
             />
           </div>
         </div>
-        
-        
       </SwipeableViews>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
+            <Typography id="transition-modal-title" variant="h6" component="h2">
+              {rows1[selectedUser].firstName} {rows1[selectedUser].lastName} [include all user info] [will be editable]
+            </Typography>
+            aaa
+          </Box>
+        </Fade>
+      </Modal>
     </Box>
   );
 }

@@ -47,9 +47,16 @@ const rows = [
 ];
 
 export default function Records() {
+  const [open, setOpen] = React.useState(false);
+  const [selectedUser, setSelectedUser] = React.useState(0);
+  const handleClose = () => setOpen(false);
   const [show, setShow] = React.useState(false);
   const [height, setheight] = React.useState('100%');
 
+  function handleRowClicked (row) {
+    setSelectedUser(row.id-1);
+    setOpen(true);
+  }
   function handleClick () {
       setShow(!show);
       if (show){
@@ -75,7 +82,7 @@ export default function Records() {
               columns={columns}
               pageSize={15}
               rowsPerPageOptions={[15]}
-              onRowClick={handleClick}
+              onRowClick={handleRowClicked}
               components={{
                 Toolbar: GridToolbar,
               }}

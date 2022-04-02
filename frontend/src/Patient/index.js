@@ -12,9 +12,8 @@ import Appointments from './Appointments.js';
 import RecordsList from './RecordsList.js';
 import Rating from '../Components/Rating.js';
 
-function Patient({branchName}) {  
+function Patient({userID}) {  
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
   const theme = React.useMemo(
     (mode) =>
       createTheme({
@@ -37,6 +36,7 @@ function Patient({branchName}) {
       }),
     [prefersDarkMode],
   );
+  
   return (
     <div className="Patient">
       <ThemeProvider theme = {theme}>
@@ -46,7 +46,7 @@ function Patient({branchName}) {
           <Grid container id="Grid">
             <Grid item sm={12} md={6}>
               <Paper elevation={3} sx={{m:3, height:'358px'}}>
-                <Profile/>
+                <Profile userID={userID}/>
               </Paper>
             </Grid>
             <Grid item sm={12} md={6}>
