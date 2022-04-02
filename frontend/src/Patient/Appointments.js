@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
@@ -46,7 +46,14 @@ function a11yProps(index) {
   };
 }
 
-export default function Appointments() {
+
+export default function Appointments({userID}) {
+  const [values, setValues] = React.useState({
+    appointment_type: '',
+    appointment_date: '',
+    duration: '',
+    dentist: ''
+  });
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState(0);
   const theme = useTheme();
@@ -122,6 +129,27 @@ export default function Appointments() {
     setSelectedUser(row.id-1);
     setOpen(true);
   }  
+
+  
+const getAppointments = () => {
+  fetch('http://localhost:3000/handlePatientAppointments', {
+    method: "POST",
+    headers: {  'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userID })
+  }).then(res => {
+    if(res.ok){
+      return res.json();
+    }
+    throw res;
+  }).then(data => {
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n"+data.name);
+    
+    /* setValues({ ...values, userId: userID, userName: data.name, age: 22, DOB: data.DOB, contact: data.contact, address: data.address}); */
+  });
+}
+useEffect(() => {
+  getAppointments();
+},[]);
 
   return (
     <Box>

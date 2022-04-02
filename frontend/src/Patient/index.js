@@ -56,12 +56,12 @@ function Patient({userID}) {
             </Grid>
             <Grid item sm={12} md={6}>
               <Paper elevation={3} sx={{m:3, height:'400px'}}>
-                <RecordsList/>
+                <RecordsList userID={userID}/>
               </Paper>
             </Grid>
             <Grid item sm={12} md={6}>
               <Paper elevation={3} sx={{m:3, height:'400px'}}>
-                <Appointments/>
+                <Appointments userID={userID}/>
               </Paper>
             </Grid>
             <Grid item sx={{ width:'80%', ml: 'auto', mr: 'auto'}}>

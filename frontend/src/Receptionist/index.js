@@ -1,5 +1,5 @@
 import '../App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
@@ -10,7 +10,7 @@ import Navbar from '../Components/Navbar.js';
 import Appointments from './Appointments.js';
 import Records from '../Components/Records.js'
 
-function Receptionist({branchName}) {  
+function Receptionist({branchName}) { 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = React.useMemo(

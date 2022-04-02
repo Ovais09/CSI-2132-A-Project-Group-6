@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -7,46 +7,49 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 40 },
   {
-    field: 'lastName',
-    headerName: 'Last Name',
+    field: 'patient_name',
+    headerName: 'Patient Name',
     width: 150,
     editable: true,
   },
   {
-    field: 'firstName',
-    headerName: 'First Name',
+    field: 'employee_name',
+    headerName: 'Employee Name',
     width: 150,
     editable: true,
   },
+  { 
+    field: 'appointment_type', 
+    headerName: 'Appointment Type', 
+    width: 150 
+  },
   {
-    field: 'DOB',
-    headerName: 'Date Of Birth',
+    field: 'start_time',
+    headerName: 'Start Time',
     type: 'number',
     sortable: false,
-    width: 110,
+    width: 100,
   },
   {
-    field: 'Contact',
-    headerName: '[email_address, phone number]',
+    field: 'end_time',
+    headerName: 'End Time',
     sortable: false,
-    width: 160,
+    width: 100,
     editable: true,
   },
 ];
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', DOB: 35, Contact: 'blablabla'  },
-  { id: 2, lastName: 'Snow', firstName: 'meh', DOB: 2, Contact: 'blablabla'  },
-  { id: 3, lastName: 'Snow', firstName: 'boop', DOB: 5, Contact: 'blablabla'  },
-  { id: 4, lastName: 'Snow', firstName: 'ya', DOB: 456, Contact: 'blablabla'  },
-  { id: 5, lastName: 'Snow', firstName: 'nooo', DOB: 8, Contact: 'blablabla'  },
-  { id: 6, lastName: 'Snow', firstName: 'pfff', DOB: 7, Contact: 'blablabla'  },
-  { id: 7, lastName: 'Snow', firstName: 'hhhhh', DOB: 46, Contact: 'blablabla'  },
-  { id: 8, lastName: 'Snow', firstName: 'beep', DOB: 3, Contact: 'blablabla'  },
-  { id: 9, lastName: 'Snow', firstName: 'bop', DOB: 35, Contact: 'blablabla'  },
-  { id: 10, lastName: 'Snow', firstName: 'kevin', DOB: 87, Contact: 'blablabla'  },
-];
+
+const tempRows = [{
+  id: 1,
+  patient_name: "name",
+  employee_name: "name2",
+  appointment_type: "type",
+  appointment_date: "date",
+  start_time: "start_time",
+  end_time: "end_time",
+}];
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -61,7 +64,8 @@ const style = {
   p: 4,
 };
 
-export default function DataGridDemo() {
+export default function DataGridRecords() {
+  const [rows, setRows] = React.useState(tempRows);
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState(0);
   const handleClose = () => setOpen(false);
@@ -71,8 +75,36 @@ export default function DataGridDemo() {
     setOpen(true);
   }
 
+  
+  const getAppointments = () => {
+    fetch('http://localhost:3000/handleReceptionnistAppointments', {
+      method: "POST",
+      headers: {  'Content-Type': 'application/json' },
+      body: JSON.stringify()
+    }).then(res => {
+      if(res.ok){
+        return res.json();
+      }
+      throw res;
+    }).then(data => {
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n"+data);
+      console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n"+data.appointment_id);
+      
+      setRows(data);
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaccccaaaaaaaaaaaaaaaaaaa\n"+data);
+      console.log("bbbbbbbbbbbbbbbbbbbbbbbbbddddbbbbbbbbbbbbbbbbbbbb\n"+data.appointment_id);
+    });
+  }
+  useEffect(() => {
+    getAppointments();
+  },[]);
+
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
+      {/* {this.state.gridValues.map((griRows, index) => (
+        <p>Hello, {griRows.employee_last_name} from {griRows.employee_first_name}!</p>
+      ))} */}
       <Typography variant="h4" align="left" sx={{ p: 3 }}>Patient Records</Typography>
       <DataGrid 
         sx={{ bgcolor: 'background.paper', m: 1 }}
