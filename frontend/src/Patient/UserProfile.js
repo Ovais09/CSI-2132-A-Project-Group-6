@@ -88,7 +88,6 @@ function PatientProfile({userID}) {
       }
       throw res;
     }).then(data => {
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n"+data.name);
       
       setValues({ ...values, userId: userID, userName: data.name, age: 22, DOB: data.DOB, contact: data.contact, address: data.address});
     });

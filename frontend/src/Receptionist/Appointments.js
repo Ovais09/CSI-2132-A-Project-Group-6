@@ -1,68 +1,80 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 
+const columns = [
+  {
+    field: 'patient_name',
+    headerName: 'Patient Name',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'employee_name',
+    headerName: 'Employee Name',
+    width: 150,
+    editable: true,
+  },
+  { 
+    field: 'appointment_type', 
+    headerName: 'Appointment Type', 
+    width: 150 
+  },
+  {
+    field: 'start_time',
+    headerName: 'Start Time',
+    type: 'number',
+    sortable: false,
+    width: 100,
+  },
+  {
+    field: 'end_time',
+    headerName: 'End Time',
+    sortable: false,
+    width: 100,
+    editable: true,
+  },
+];
 
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
-}
+const tempRows = [{
+  id: 1,
+  patient_name: "name",
+  employee_name: "name2",
+  appointment_type: "type",
+  appointment_date: "date",
+  start_time: "start_time",
+  end_time: "end_time",
+}];
 
-export default function FullWidthTabs() {
+export default function Appointments() {
+  const [rows, setRows] = React.useState(tempRows);
   const theme = useTheme();
   
-  const columns = [
-    { field: 'id', headerName: 'ID', width: 40 },
-    {
-      field: 'firstName',
-      headerName: 'Appointment',
-      width: 130,
-      editable: true,
-    },
-    {
-      field: 'lastName',
-      headerName: 'Time',
-      width: 120,
-      editable: true,
-    },
-    {
-      field: 'age',
-      headerName: 'Duration',
-      type: 'number',
-      width: 120,
-      editable: true,
-    },
-    {
-      field: 'fullName',
-      headerName: 'Room',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 70,
-    }
-  ];
-  const rows1 = [
-    { id: 1, lastName: '[start_time]', firstName: '[appointment_type]', age: '[end-start]', fullName: '[Room Assigned]' },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  ];
-  const rows2 = [
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  ];
+  const getAppointments = () => {
+    fetch('http://localhost:3000/handleReceptionnistAppointments', {
+      method: "POST",
+      headers: {  'Content-Type': 'application/json' },
+      body: JSON.stringify()
+    }).then(res => {
+      if(res.ok){
+        return res.json();
+      }
+      throw res;
+    }).then(data => {
+      setRows(data);
+    });
+  }
+  useEffect(() => {
+    getAppointments();
+  },[]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
       <Typography variant="h4" align="left" sx={{ p: 3 }}>Today's Appointments</Typography>
       <DataGrid
         sx={{ bgcolor: 'background.paper', m: 1 }}
-        rows={rows1}
+        rows={rows}
         columns={columns}
         pageSize={15}
         rowsPerPageOptions={[15]}

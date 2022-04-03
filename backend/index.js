@@ -125,7 +125,7 @@ app.post("/handleProfile", (req, res) => {
 });
 
 
-app.post("/handleMedicalRecordsPatient", (req, res) => {
+app.post("/handleMedicalRecordsPat", (req, res) => {
 
   var patient_id = "SELECT patient_id FROM patientrecords WHERE user_id = " + req.body.user_id;
   var slq = "";
@@ -161,47 +161,50 @@ app.post("/handleMedicalRecordsPatient", (req, res) => {
 });
 
 
-app.post("/handlePatientAppointments", (req, res) => {
+app.post("/handlePatientPastAppointments", (req, res) => {
 
-  var user_ssn = "SELECT * FROM appointment WHERE user_id = " + req.body.user_id;
-  var appt_id = "";
-  pool.query(user_ssn, (err, result) => {
+  var appts = "SELECT (@cnt := @cnt + 1) AS id, CONCAT(person_patient.first_name, ' ', person_patient.last_name) AS patient_name, CONCAT(person_employee.first_name, ' ', person_employee.last_name) AS employee_name , appointment.appointment_type, appointment.appointment_date, appointment.start_time, appointment.end_time FROM appointment LEFT JOIN appointment_employeeid ON appointment.appointment_id = appointment_employeeid.appointment_id LEFT JOIN  person AS person_employee ON person_employee.SSN = appointment_employeeid.employee_id LEFT JOIN  person AS person_patient ON person_patient.SSN = appointment.patient_id CROSS JOIN (SELECT @cnt := 0) AS dummy WHERE user_id ="+req.body.user_id+" AND appointment_date < '"+req.body.date+"';";
+
+  console.log(req.body.user_id);
+  console.log("req.body.user_id");
+  console.log(req.body.date);
+  console.log("req.body.date");
+
+  pool.query(appts, (err, result) => {
     if (!err) {
       var resultQuery = JSON.parse(JSON.stringify(result))
       console.log(resultQuery);
-      console.log("Success for SSN");
-      appt_id = "SELECT * FROM Person WHERE SSN = '" + resultQuery[0].SSN + "'";
-/* 223456789 */
-      res.send(JSON.stringify({
-        appointment_type: resultQuery[0].appointment_type,
-        appointment_date: resultQuery[0].appointment_date,
-        duration: resultQuery[0].duration,
-      }));
-      pool.query(appt_id, (err, result) => {
-        if (!err) {
-          var resultQuery = JSON.parse(JSON.stringify(result))
-          console.log(resultQuery);
-          console.log("Success for Person");
-    
-          res.send(JSON.stringify({
-            dentist: resultQuery[0].dentist
-          }));
-        } else {
-          console.log("Error while performing Query.");
-        }
-      });
+      console.log("Success for past appts");
 
+      res.send(resultQuery);
     } else {
       console.log("Error while performing Query.");
     }
   });
 });
 
+
+app.post("/handlePatientFutureAppointments", (req, res) => {
+
+  var appts = "SELECT (@cnt := @cnt + 1) AS id, CONCAT(person_patient.first_name, ' ', person_patient.last_name) AS patient_name, CONCAT(person_employee.first_name, ' ', person_employee.last_name) AS employee_name , appointment.appointment_type, appointment.appointment_date, appointment.start_time, appointment.end_time FROM appointment LEFT JOIN appointment_employeeid ON appointment.appointment_id = appointment_employeeid.appointment_id LEFT JOIN  person AS person_employee ON person_employee.SSN = appointment_employeeid.employee_id LEFT JOIN  person AS person_patient ON person_patient.SSN = appointment.patient_id CROSS JOIN (SELECT @cnt := 0) AS dummy WHERE user_id ="+req.body.user_id+" AND appointment_date >= '"+req.body.date+"';";
+
+  pool.query(appts, (err, result) => {
+    if (!err) {
+      var resultQuery = JSON.parse(JSON.stringify(result))
+      console.log(resultQuery);
+      console.log("Success for future appts");
+
+      res.send(resultQuery);
+    } else {
+      console.log("Error while performing Query.");
+    }
+  });
+});
 /* 223456789 */
 
 app.post("/handleReceptionnistAppointments", (req, res) => {
 
-  var appts = "SELECT (@cnt := @cnt + 1) AS id, CONCAT(person_patient.first_name, ' ', person_patient.last_name) AS patient_name, CONCAT(person_employee.first_name, person_employee.last_name) AS employee_name , appointment.appointment_type, appointment.appointment_date, appointment.start_time, appointment.end_time FROM appointment LEFT JOIN appointment_employeeid ON appointment.appointment_id = appointment_employeeid.appointment_id LEFT JOIN  person AS person_employee ON person_employee.SSN = appointment_employeeid.employee_id LEFT JOIN  person AS person_patient ON person_patient.SSN = appointment.patient_id CROSS JOIN (SELECT @cnt := 0) AS dummy;";
+  var appts = "SELECT (@cnt := @cnt + 1) AS id, CONCAT(person_patient.first_name, ' ', person_patient.last_name) AS patient_name, CONCAT(person_employee.first_name, ' ', person_employee.last_name) AS employee_name , appointment.appointment_type, appointment.appointment_date, appointment.start_time, appointment.end_time FROM appointment LEFT JOIN appointment_employeeid ON appointment.appointment_id = appointment_employeeid.appointment_id LEFT JOIN  person AS person_employee ON person_employee.SSN = appointment_employeeid.employee_id LEFT JOIN  person AS person_patient ON person_patient.SSN = appointment.patient_id CROSS JOIN (SELECT @cnt := 0) AS dummy;";
 
   pool.query(appts, (err, result) => {
     if (!err) {

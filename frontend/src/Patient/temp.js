@@ -84,7 +84,7 @@ const tempRows = [{
   end_time: "end_time",
 }];
 
-export default function Appointments({userID}) {
+export default function BasicTabs({userID}) {
   const [value, setValue] = React.useState(0);
   const [rowsPast, setRowsPast] = React.useState(tempRows);
   const [rowsFuture, setRowsFuture] = React.useState(tempRows);

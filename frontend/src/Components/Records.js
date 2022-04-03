@@ -65,7 +65,6 @@ const style = {
 };
 
 export default function DataGridRecords() {
-  const [rows, setRows] = React.useState(tempRows);
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState(0);
   const handleClose = () => setOpen(false);
@@ -75,40 +74,12 @@ export default function DataGridRecords() {
     setOpen(true);
   }
 
-  
-  const getAppointments = () => {
-    fetch('http://localhost:3000/handleReceptionnistAppointments', {
-      method: "POST",
-      headers: {  'Content-Type': 'application/json' },
-      body: JSON.stringify()
-    }).then(res => {
-      if(res.ok){
-        return res.json();
-      }
-      throw res;
-    }).then(data => {
-      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n"+data);
-      console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n"+data.appointment_id);
-      
-      setRows(data);
-      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaccccaaaaaaaaaaaaaaaaaaa\n"+data);
-      console.log("bbbbbbbbbbbbbbbbbbbbbbbbbddddbbbbbbbbbbbbbbbbbbbb\n"+data.appointment_id);
-    });
-  }
-  useEffect(() => {
-    getAppointments();
-  },[]);
-
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
-      {/* {this.state.gridValues.map((griRows, index) => (
-        <p>Hello, {griRows.employee_last_name} from {griRows.employee_first_name}!</p>
-      ))} */}
       <Typography variant="h4" align="left" sx={{ p: 3 }}>Patient Records</Typography>
       <DataGrid 
         sx={{ bgcolor: 'background.paper', m: 1 }}
-        rows={rows}
+        rows={tempRows}
         columns={columns}
         pageSize={15}
         rowsPerPageOptions={[15]}
@@ -132,11 +103,11 @@ export default function DataGridRecords() {
       <Fade in={open}>
         <Box sx={style}>
           <Typography id="transition-modal-title" variant="h6" component="h2">
-            {rows[selectedUser].firstName} {rows[selectedUser].lastName} [include all user info] [will be editable]
+            {tempRows[selectedUser].firstName} {tempRows[selectedUser].lastName} [include all user info] [will be editable]
           </Typography>
           <DataGrid 
             sx={{ bgcolor: 'background.paper', height: '90%', m: 1 }}
-            rows={rows}
+            rows={tempRows}
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10]}
