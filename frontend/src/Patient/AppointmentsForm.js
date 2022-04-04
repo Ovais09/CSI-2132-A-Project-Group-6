@@ -70,6 +70,7 @@ export default function DialogSelect({userID}) {
   const submit = () => {
     console.log("Submited");    
     handleClose();
+    submitAppointment();
   };
 
   const handleDentistChange = (event) => {
@@ -114,7 +115,6 @@ export default function DialogSelect({userID}) {
     if (reason !== 'backdropClick') {
       setOpen(false);
     }
-    submitAppointment();
   };
 
   const submitAppointment = () => {
