@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -18,29 +19,91 @@ import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-export default function DialogSelect() {
+
+const tempValues = [
+  {
+    patient_id: "patient_id",
+    user_id: "user_id",
+    appointment_type: "appointment_type",
+    appointment_date: "appointment_date",
+    start_time: "start_time",
+    end_time: "end_time",
+    employee_id: "employee_id"
+  }
+];
+
+const tempDentists = [
+  {
+    ID: 1,
+    first_name: "name",
+    last_name: "name2",
+    employee_id: "employee_id"
+  },
+  {
+    ID: 2,
+    first_name: "name3",
+    last_name: "name4",
+    employee_id: "employee_id2"
+  }
+];
+
+const procedures = [
+  {
+    procedure_type: "Cleaning"
+  },
+  {
+    procedure_type: "Diagnosis"
+  },
+  {
+    procedure_type: "Surgery"
+  }
+];
+
+export default function DialogSelect({userID}) {
   const [open, setOpen] = React.useState(false);
   const [dentist, setDentist] = React.useState('');
   const [procedure, setProcedure] = React.useState('');
-  const [value, setValue] = React.useState(new Date());
-
-  const initState = {
-    email: "",
-    password: "",
-    phone: ""
-  };
+  const [dateValue, setDateValue] = React.useState(new Date());
+  const [dentists, setDentists] = React.useState(tempDentists);
+  const [patientValues, setPatientValues] = React.useState(tempValues);
   
   const submit = () => {
-    console.log(" Submited");
+    console.log("Submited");    
     handleClose();
   };
 
   const handleDentistChange = (event) => {
     setDentist(Number(event.target.value) || '');
+    console.log('dentists['+Number(Number(event.target.value)-1)+'].employee_id');
+    console.log(dentists[Number(Number(event.target.value)-1)].employee_id);
+    setPatientValues({...patientValues, employee_id: dentists[Number(Number(event.target.value)-1)].employee_id});
   };
 
   const handleProcedureChange = (event) => {
     setProcedure(Number(event.target.value) || '');
+    console.log('procedures['+Number(Number(event.target.value)-1)+'].procedure_type');
+    console.log(procedures[Number(Number(event.target.value)-1)].procedure_type);
+    setPatientValues({...patientValues, appointment_type: procedures[Number(Number(event.target.value)-1)].procedure_type});
+  };
+
+  const handleTimeChange = (newValue) => {
+    setDateValue(newValue);
+    console.log(newValue);
+    console.log('newValue');
+
+    var month = dateValue.getMonth()+1;
+    if (month < 10){
+      month = '0'+month;
+    }
+    var day = dateValue.getDate();
+    if (day < 10){
+      day = '0'+day;
+    }
+    const apDate = dateValue.getFullYear()+'-'+month+'-'+day;
+    const apTimeStart = dateValue.getHours()+":"+dateValue.getMinutes()+":00";
+    const apTimeEnd = (dateValue.getHours()+1)+":"+dateValue.getMinutes()+":00";
+
+    setPatientValues({...patientValues, appointment_date: apDate, start_time: apTimeStart, end_time: apTimeEnd});
   };
 
   const handleClickOpen = () => {
@@ -51,7 +114,53 @@ export default function DialogSelect() {
     if (reason !== 'backdropClick') {
       setOpen(false);
     }
+    submitAppointment();
   };
+
+  const submitAppointment = () => {
+    fetch('http://localhost:3000/handleNewAppointment', {
+      method: "POST",
+      headers: {  'Content-Type': 'application/json' },
+      body: JSON.stringify({ patient_id: patientValues.patient_id, user_id: userID, appointment_type: patientValues.appointment_type, appointment_date: patientValues.appointment_date, start_time: patientValues.start_time, end_time: patientValues.end_time, employee_id: patientValues.employee_id })
+    }).then(res => {
+      if(res.ok){
+        return res.json();
+      }
+      throw res;
+    });
+  };
+
+  const getValues = () => {
+
+    fetch('http://localhost:3000/handleDoctorList', {
+      method: "POST",
+      headers: {  'Content-Type': 'application/json' },
+      body: JSON.stringify()
+    }).then(res => {
+      if(res.ok){
+        return res.json();
+      }
+      throw res;
+    }).then(data => {
+      setDentists(data);
+    });
+    
+    fetch('http://localhost:3000/handlePatientID', {
+      method: "POST",
+      headers: {  'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userID })
+    }).then(res => {
+      if(res.ok){
+        return res.json();
+      }
+      throw res;
+    }).then(data => {
+      setPatientValues({...patientValues, patient_id: data.patient_id, user_id: userID});
+    });
+  }
+  useEffect(() => {
+    getValues();
+  },[]);
 
   return (
     <div>
@@ -74,9 +183,9 @@ export default function DialogSelect() {
                             <MenuItem value="">
                             <em>Please Select One</em>
                             </MenuItem>
-                            <MenuItem value={10}>Dentist1</MenuItem>
-                            <MenuItem value={20}>Dentist2</MenuItem>
-                            <MenuItem value={30}>Dentist3</MenuItem>
+                              {dentists.map((d, index) => (
+                                <MenuItem value={d.ID}>{d.first_name} {d.last_name}</MenuItem>
+                              ))}
                         </Select>
                     </FormControl>
                     <FormControl sx={{ m: 1, minWidth: 120 }}>
@@ -91,18 +200,18 @@ export default function DialogSelect() {
                             <MenuItem value="">
                             <em>Please Select One</em>
                             </MenuItem>
-                            <MenuItem value={10}>Procedure1</MenuItem>
-                            <MenuItem value={20}>Procedure2</MenuItem>
-                            <MenuItem value={30}>Procedure3</MenuItem>
+                            <MenuItem value={1}>Cleaning</MenuItem>
+                            <MenuItem value={2}>Diagnosis</MenuItem>
+                            <MenuItem value={3}>Surgery</MenuItem>
                         </Select>
                     </FormControl>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DateTimePicker
                             renderInput={(props) => <TextField {...props} />}
                             label="DateTimePicker"
-                            value={value}
+                            value={dateValue}
                             onChange={(newValue) => {
-                            setValue(newValue);
+                              handleTimeChange(newValue);
                             }}
                             minDate={new Date()}
                             minTime={new Date(0, 0, 0, 8)}

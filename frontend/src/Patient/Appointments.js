@@ -106,8 +106,6 @@ export default function Appointments({userID}) {
     }
     todayDate = todayDate.getFullYear()+'-'+month+'-'+day;
 
-    console.log("DATE: "+ todayDate)
-
     fetch('http://localhost:3000/handlePatientPastAppointments', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
@@ -140,7 +138,7 @@ export default function Appointments({userID}) {
 
   return (
     <Box>
-        <Typography variant="h4" align="center" sx={{ p: 3, display: 'flex', justifyContent: 'space-evenly', }}>Appointments <AppointmentsForm/></Typography>
+        <Typography variant="h4" align="center" sx={{ p: 3, display: 'flex', justifyContent: 'space-evenly', }}>Appointments <AppointmentsForm userID={userID}/></Typography>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} variant="fullWidth" onChange={handleChange} aria-label="upcoming appointments on the left tab and past appointments on the right tab">
           <Tab label="Upcomming Appointments" {...a11yProps(0)} />
