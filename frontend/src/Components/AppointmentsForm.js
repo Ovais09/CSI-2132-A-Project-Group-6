@@ -19,7 +19,6 @@ import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-
 const tempValues = [
   {
     patient_id: "patient_id",
@@ -59,14 +58,16 @@ const procedures = [
   }
 ];
 
-export default function DialogSelect({userID}) {
+export default function AppointmentsForm() {
   const [open, setOpen] = React.useState(false);
   const [dentist, setDentist] = React.useState('');
   const [procedure, setProcedure] = React.useState('');
+  const [patientFN, setPatientFN] = React.useState('');
+  const [patientLN, setPatientLN] = React.useState('');
   const [dateValue, setDateValue] = React.useState(new Date());
   const [dentists, setDentists] = React.useState(tempDentists);
   const [patientValues, setPatientValues] = React.useState(tempValues);
-  
+
   const submit = () => {
     console.log("Submited");    
     handleClose();
@@ -78,6 +79,22 @@ export default function DialogSelect({userID}) {
     console.log('dentists['+Number(Number(event.target.value)-1)+'].employee_id');
     console.log(dentists[Number(Number(event.target.value)-1)].employee_id);
     setPatientValues({...patientValues, employee_id: dentists[Number(Number(event.target.value)-1)].employee_id});
+  };
+
+  const handlePatientFNChange = (event) => {
+    console.log(patientFN);
+    console.log("patientFN");
+    console.log(patientLN);
+    console.log("patientLN");
+    setPatientFN(event.target.value);
+  };
+
+  const handlePatientLNChange = (event) => {
+    console.log(patientFN);
+    console.log("patientFN");
+    console.log(patientLN);
+    console.log("patientLN");
+    setPatientLN(event.target.value);
   };
 
   const handleProcedureChange = (event) => {
@@ -118,16 +135,17 @@ export default function DialogSelect({userID}) {
   };
 
   const submitAppointment = () => {
-    fetch('http://localhost:3000/handleNewAppointment', {
+
+    fetch('http://localhost:3000/handleNewAppointmentReceptionnist', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
-      body: JSON.stringify({ patient_id: patientValues.patient_id, user_id: userID, appointment_type: patientValues.appointment_type, appointment_date: patientValues.appointment_date, start_time: patientValues.start_time, end_time: patientValues.end_time, employee_id: patientValues.employee_id })
+      body: JSON.stringify({ first_name: patientFN, last_name: patientLN, appointment_type: patientValues.appointment_type, appointment_date: patientValues.appointment_date, start_time: patientValues.start_time, end_time: patientValues.end_time, employee_id: patientValues.employee_id })
     }).then(res => {
       if(res.ok){
         return res.json();
       }
       throw res;
-    });
+    })
   };
 
   const getValues = () => {
@@ -144,19 +162,6 @@ export default function DialogSelect({userID}) {
     }).then(data => {
       setDentists(data);
     });
-    
-    fetch('http://localhost:3000/handlePatientID', {
-      method: "POST",
-      headers: {  'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: userID })
-    }).then(res => {
-      if(res.ok){
-        return res.json();
-      }
-      throw res;
-    }).then(data => {
-      setPatientValues({...patientValues, patient_id: data.patient_id, user_id: userID});
-    });
   }
   useEffect(() => {
     getValues();
@@ -164,13 +169,18 @@ export default function DialogSelect({userID}) {
 
   return (
     <div>
-        
       <IconButton onClick={handleClickOpen}><AddCircleIcon/></IconButton>
       <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
             <DialogTitle>Please complete the form</DialogTitle>
             <DialogContent>
             <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
                 <Stack spacing={3}>
+                    <FormControl sx={{ m: 1, minWidth: 120 }}>
+                      <TextField value={patientFN} id="patient-first-name" label="First Name" variant="outlined" onChange={handlePatientFNChange} />
+                    </FormControl>
+                    <FormControl sx={{ m: 1, minWidth: 120 }}>
+                      <TextField value={patientLN} id="patient-last-name" label="Last Name" variant="outlined" onChange={handlePatientLNChange}/>
+                    </FormControl>
                     <FormControl sx={{ m: 1, minWidth: 120 }}>
                         <InputLabel id="Dentist-dialog">Dentist</InputLabel>
                         <Select

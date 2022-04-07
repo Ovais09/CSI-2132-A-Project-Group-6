@@ -83,7 +83,7 @@ app.post("/handle", (req, res) => {
         }));
       }
     } else {
-      console.log("Error while performing Query.");
+      console.log("Error while performing handle Query.");
     }
   });
 
@@ -138,7 +138,7 @@ app.post("/handleDoctorList", (req, res) => {
 
       res.send(resultQuery);
     } else {
-      console.log("Error while performing Query.");
+      console.log("Error while performing handleDoctorList Query.");
     }
   });
 });
@@ -156,7 +156,7 @@ app.post("/handlePatientPastAppointments", (req, res) => {
 
       res.send(resultQuery);
     } else {
-      console.log("Error while performing Query.");
+      console.log("Error while performing handlePatientPastAppointments Query.");
     }
   });
 });
@@ -174,7 +174,7 @@ app.post("/handlePatientFutureAppointments", (req, res) => {
 
       res.send(resultQuery);
     } else {
-      console.log("Error while performing Query.");
+      console.log("Error while performing handlePatientFutureAppointments Query.");
     }
   });
 });
@@ -192,25 +192,66 @@ app.post("/handleReceptionnistAppointments", (req, res) => {
 
       res.send(resultQuery);
     } else {
-      console.log("Error while performing Query.");
+      console.log("Error while performing handleReceptionnistAppointments Query.");
     }
   });
 });
 
+
+app.post("/handleReceptionnistUsers", (req, res) => {
+
+  var appts = "SELECT (@cnt := @cnt + 1) AS id, CONCAT(person.first_name, ' ', COALESCE(`middle_name`,''), ' ', person.last_name) AS person_name,   email_address, phone_number, date_of_birth, CONCAT(house_number, ' ', street, ', ', person.city, ', ', province ) AS address, COALESCE(`employee_role`,'') AS role, branch.branch_id FROM person LEFT JOIN  employee ON person.SSN = employee.employee_id LEFT JOIN  branch ON person.city = branch.city CROSS JOIN (SELECT @cnt := 0) AS dummy;";
+
+  pool.query(appts, (err, result) => {
+    if (!err) {
+      var resultQuery = JSON.parse(JSON.stringify(result))
+      /* console.log(resultQuery);
+      console.log("Success for recs"); */
+
+      res.send(resultQuery);
+    } else {
+      console.log("Error while performing handleReceptionnistUsers Query.");
+    }
+  });
+});
+
+
+app.post("/handleUserRecords", (req, res) => {
+
+  var appts = "SELECT (@cnt := @cnt + 1) AS id, appointment.appointment_id, patientrecords.record_id, CONCAT(person_patient.first_name, ' ', person_patient.last_name) AS patient_name, CONCAT(person_employee.first_name, ' ', person_employee.last_name) AS employee_name, appointment.appointment_type, appointment.appointment_date, appointment.start_time, appointment.end_time, treatment_type, medication, comments, teeth, symptom FROM appointment LEFT JOIN patientrecords ON appointment.patient_id = patientrecords.patient_id AND CONCAT(appointment.appointment_date, ' ', appointment.end_time ) = patientrecords.records_date LEFT JOIN appointment_employeeid ON appointment.appointment_id = appointment_employeeid.appointment_id LEFT JOIN  person AS person_employee ON person_employee.SSN = appointment_employeeid.employee_id LEFT JOIN  person AS person_patient ON person_patient.SSN = appointment.patient_id LEFT JOIN  treatment ON  treatment.appointment_id = appointment.appointment_id AND treatment.record_id = patientrecords.record_id LEFT JOIN  treatment_teeth ON treatment.patient_id = treatment_teeth.patient_id AND treatment.treatment_id = treatment_teeth.treatment_id LEFT JOIN  treatment_symptoms ON patientrecords.patient_id = treatment.patient_id AND treatment.treatment_id = treatment_symptoms.treatment_id CROSS JOIN (SELECT @cnt := 0) AS dummy WHERE "+ req.body.lookingFor +" = "+req.body.equals+";";
+  console.log(appts);
+  console.log("appts");
+
+  pool.query(appts, (err, result) => {
+    if (!err) {
+      var resultQuery = JSON.parse(JSON.stringify(result))
+      console.log(resultQuery);
+      console.log("Success for recs");
+
+      res.send(resultQuery);
+    } else {
+      console.log("Error while performing handleUserRecords Query.");
+    }
+  });
+});
+
+
 app.post("/handlePatientID", (req, res) => {
 
   var pat_id = "SELECT patient_id FROM patient WHERE user_id = "+req.body.user_id+";";
+  console.log(pat_id);
+  console.log("pat_id");
 
   pool.query(pat_id, (err, result) => {
     if (!err) {
       var resultQuery = JSON.parse(JSON.stringify(result))
-      /* console.log(resultQuery[0].patient_id);
-      console.log("Success for pat_id"); */
+      console.log(resultQuery[0].patient_id);
+      console.log("Success for pat_id");
 
       res.send(JSON.stringify({
         patient_id: resultQuery[0].patient_id}));
     } else {
-      console.log("Error while performing Query.");
+      console.log("Error while performing handlePatientID Query.");
     }
   });
 });
@@ -257,6 +298,130 @@ app.post("/handleNewAppointment", (req, res) => {
 });
 
 
+app.post("/handleNewAppointmentReceptionnist", (req, res) => {
+  if(String(req.body.first_name) == '' || String(req.body.last_name) == ''){
+    return;
+  }
+
+  var pat_id = "SELECT patient.user_id, patient.patient_id FROM person RIGHT JOIN  patient ON person.SSN = patient.patient_id WHERE first_name = '"+req.body.first_name+"' AND last_name = '"+req.body.last_name+"';";
+  console.log(pat_id);
+  console.log("pat_id");
+
+  pool.query(pat_id, (err, result) => {
+    if (!err) {
+      var resultQuery = JSON.parse(JSON.stringify(result))
+      console.log(resultQuery);
+      console.log("Success for patient info");
+
+      const patient_id = resultQuery[0].patient_id
+
+      var insert_appointment = "INSERT INTO appointment (patient_id, user_id, appointment_type, appointment_status, appointment_date, start_time, end_time, room_assigned) VALUES ("+patient_id+", "+resultQuery[0].user_id+", '"+req.body.appointment_type+"', 'scheduled', '"+req.body.appointment_date+"', '"+req.body.start_time+"', '"+req.body.end_time+"', 'H101');";
+
+      console.log(insert_appointment);
+      console.log("insert_appointment");
+
+      pool.query(insert_appointment, (err, result) => {
+        if (!err) {
+          
+          var appointment_id = "SELECT appointment_id FROM appointment WHERE patient_id = "+patient_id+" AND appointment_date = '"+req.body.appointment_date+"' AND start_time = '"+req.body.start_time+"';";
+
+          pool.query(appointment_id, (err, result) => {
+            if (!err) {
+              var resultQuery = JSON.parse(JSON.stringify(result))
+              console.log(resultQuery);
+              console.log("Success for appointment_id");
+
+              var insert_appointment_employeeid = "INSERT INTO appointment_employeeid VALUES (123456789, "+resultQuery[0].appointment_id+", "+patient_id+"); ";
+        
+              pool.query(insert_appointment_employeeid, (err, result) => {
+                if (!err) {
+                  console.log("Success for insert_appointment_employeeid");
+            
+                  res.send("Success!");
+                } else {
+                  console.log("Error while performing Query 3.");
+                }
+              });
+            } else {
+              console.log("Error while performing Query 2.");
+            }
+          });
+        } else {
+          console.log("Error while performing Query 1.");
+        }
+      });
+
+    } else {
+      console.log("Error while performing patient info Query.");
+    }
+  });
+});
+
+
+app.post("/handleNewUser", (req, res) => {
+  var insertPerson = "INSERT INTO person VALUES ("+req.body.SSN+", '"+req.body.first_name+"', '"+req.body.middle_name+"', '"+req.body.last_name+"', '"+req.body.gender+"', '"+req.body.email_address+"', '"+req.body.date_of_birth+"', '"+req.body.phone_number+"', "+req.body.house_number+", '"+req.body.street+"', '"+req.body.city+"', '"+req.body.province+"');";
+  console.log(insertPerson);
+  console.log("insertPerson");
+
+  pool.query(insertPerson, (err, result) => {
+    if (!err) {
+      var resultQuery = JSON.parse(JSON.stringify(result))
+      console.log(resultQuery);
+      console.log("Success for insertPerson");
+
+      const SSN = resultQuery[0].SSN;
+      const firstName = resultQuery[0].first_name;
+
+      var insertUser = "Select @Var := (MAX(user_id) + 1) AS max_id From user; INSERT INTO user VALUES (@Var, '"+firstName+"', "+SSN+", '"+SSN+"');";
+
+      console.log(insertUser);
+      console.log("insertUser");
+
+      pool.query(insertUser, (err, result) => {
+        if (!err) {
+          var resultQuery = JSON.parse(JSON.stringify(result))
+          console.log(resultQuery);
+          console.log("Success for insertUser");
+          
+          var user_id = resultQuery[0].max_id;
+
+          var addPatient = "INSERT INTO patient VALUES("+SSN+", 12514, 'sunlife');";
+          var addEmployee = "";
+
+          if(String(req.body.employee_role) != ""){
+
+          }
+
+          pool.query(appointment_id, (err, result) => {
+            if (!err) {
+              var resultQuery = JSON.parse(JSON.stringify(result))
+              console.log(resultQuery);
+              console.log("Success for appointment_id");
+        
+              pool.query(insert_appointment_employeeid, (err, result) => {
+                if (!err) {
+                  console.log("Success for insert_appointment_employeeid");
+            
+                  res.send("Success!");
+                } else {
+                  console.log("Error while performing Query 3.");
+                }
+              });
+            } else {
+              console.log("Error while performing Query 2.");
+            }
+          });
+
+        } else {
+          console.log("Error while performing Query 1.");
+        }
+      });
+
+    } else {
+      console.log("Error while performing patient info Query.");
+    }
+  });
+});
 
 
 

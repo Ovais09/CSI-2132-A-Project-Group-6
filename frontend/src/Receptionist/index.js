@@ -10,7 +10,7 @@ import Navbar from '../Components/Navbar.js';
 import Appointments from './Appointments.js';
 import Records from '../Components/Records.js'
 
-function Receptionist({branchName}) { 
+function Receptionist() { 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = React.useMemo(

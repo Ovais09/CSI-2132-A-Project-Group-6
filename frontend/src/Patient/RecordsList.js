@@ -1,62 +1,114 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
 
-const columns = [
-  { field: 'id', headerName: 'ID', width: 40 },
+
+const userColumns = [
   {
-    field: 'treatmentType',
-    headerName: 'Treatment Type',
-    width: 150,
+    field: 'appointment_id',
+    headerName: 'Appointment ID',
+    width: 120,
   },
   {
-    field: 'appointmentType',
-    headerName: 'Appointment Type',
-    width: 150,
+    field: 'record_id',
+    headerName: 'Record ID',
+    width: 90,
+  },
+  {
+    field: 'patient_name',
+    headerName: 'Patient',
+    width: 120,
+  },
+  { 
+    field: 'employee_name', 
+    headerName: 'Dentist', 
+    width: 120 
+  },
+  {
+    field: 'appointment_type',
+    headerName: 'Type',
+    type: 'number',
+    width: 100,
+  },
+  {
+    field: 'appointment_date',
+    headerName: 'Date',
+    width: 120,
+  },
+  {
+    field: 'start_time',
+    headerName: 'start_time',
+    width: 100,
+  },
+  {
+    field: 'end_time',
+    headerName: 'End Time',
+    sortable: false,
+    width: 100,
+  },
+  {
+    field: 'treatment_type',
+    headerName: 'Treatment Type',
+    sortable: false,
+    width: 100,
+    editable: true,
   },
   {
     field: 'medication',
     headerName: 'Medication',
-    type: 'number',
     sortable: false,
-    width: 110,
+    width: 100,
     editable: true,
   },
   {
     field: 'comments',
     headerName: 'Comments',
     sortable: false,
-    width: 160,
+    width: 100,
+    editable: true,
+  },
+  {
+    field: 'teeth',
+    headerName: 'Teeth',
+    sortable: false,
+    width: 70,
+    editable: true,
+  },
+  {
+    field: 'symptoms',
+    headerName: 'Symptoms',
+    sortable: false,
+    width: 100,
     editable: true,
   },
 ];
 
-const rows = [
-  { id: 1, treatmentType: 'Snow', appointmentType: 'Jon', medication: 35, comments: 'blablabla'  },
-  { id: 2, treatmentType: 'Lannister', appointmentType: 'Cersei', medication: 42, comments: 'blablabla' },
-  { id: 3, treatmentType: 'Lannister', appointmentType: 'Jaime', medication: 45, comments: 'blablabla'  },
-  { id: 4, treatmentType: 'Stark', appointmentType: 'Arya', medication: 16, comments: 'blablabla'  },
-  { id: 5, treatmentType: 'Targaryen', appointmentType: 'Daenerys', medication: null, comments: 'blablabla'  },
-  { id: 6, treatmentType: 'Melisandre', appointmentType: null, medication: 150, comments: 'blablabla'  },
-  { id: 7, treatmentType: 'Clifford', appointmentType: 'Ferrara', medication: 44, comments: 'blablabla'  },
-  { id: 8, treatmentType: 'Frances', appointmentType: 'Rossini', medication: 36, comments: 'blablabla'  },
-  { id: 9, treatmentType: 'Roxie', appointmentType: 'Harvey', medication: 65, comments: 'blablabla'  },
-];
+const tempUserRows = [{
+  id: 1,
+  appointment_id: "appointment_id",
+  record_id: "record_id",
+  patient_name: "patient name",
+  employee_name: "dentist name",
+  appointment_type: "appointment_type",
+  appointment_date: "appointment_date",
+  start_time: "start_time",
+  end_time: "end_time",
+  treatment_type: "treatment_type",
+  medication: "medication",
+  comments: "comments",
+  teeth: "teeth",
+  symptoms: "symptoms",
+}];
 
-export default function Records() {
-  const [open, setOpen] = React.useState(false);
-  const [selectedUser, setSelectedUser] = React.useState(0);
-  const handleClose = () => setOpen(false);
+export default function Records({userID}) {
+  const [userRows, setUserRows] = React.useState(tempUserRows);
   const [show, setShow] = React.useState(false);
   const [height, setheight] = React.useState('100%');
 
-  function handleRowClicked (row) {
-    setSelectedUser(row.id-1);
-    setOpen(true);
-  }
   function handleClick () {
       setShow(!show);
       if (show){
@@ -66,6 +118,26 @@ export default function Records() {
         setheight('20%');
       }
   }
+
+  
+  const getUserRecords = () => {
+    fetch('http://localhost:3000/handleUserRecords', {
+      method: "POST",
+      headers: {  'Content-Type': 'application/json' },
+      body: JSON.stringify({lookingFor: 'user_id', equals: userID})
+    }).then(res => {
+      if(res.ok){
+        return res.json();
+      }
+      throw res;
+    }).then(data => {
+      setUserRows(data);
+    });
+  }
+
+  useEffect(() => {
+    getUserRecords();
+  },[]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
@@ -78,11 +150,10 @@ export default function Records() {
           <CardContent sx={{ width:'100%', height: '100%', p:0 }}>
               <DataGrid 
               sx={{ bgcolor: 'background.paper', m: 1 }}
-              rows={rows}
-              columns={columns}
+              rows={userRows}
+              columns={userColumns}
               pageSize={15}
               rowsPerPageOptions={[15]}
-              onRowClick={handleRowClicked}
               components={{
                 Toolbar: GridToolbar,
               }}

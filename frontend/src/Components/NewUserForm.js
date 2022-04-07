@@ -59,7 +59,7 @@ const procedures = [
   }
 ];
 
-export default function DialogSelect({userID}) {
+export default function NewUserForm({userID}) {
   const [open, setOpen] = React.useState(false);
   const [dentist, setDentist] = React.useState('');
   const [procedure, setProcedure] = React.useState('');

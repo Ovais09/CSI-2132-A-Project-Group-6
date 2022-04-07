@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
+import AppointmentsForm from '../Components/AppointmentsForm';
 
 const columns = [
   {
@@ -71,7 +72,7 @@ export default function Appointments() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
-      <Typography variant="h4" align="left" sx={{ p: 3 }}>Today's Appointments</Typography>
+      <Typography variant="h4" align="center" sx={{ p: 3, display: 'flex', justifyContent: 'space-evenly', }}>Upcoming Appointments <AppointmentsForm/></Typography>
       <DataGrid
         sx={{ bgcolor: 'background.paper', m: 1 }}
         rows={rows}
