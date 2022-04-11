@@ -178,17 +178,16 @@ app.post("/handlePatientFutureAppointments", (req, res) => {
     }
   });
 });
-/* 223456789 */
 
 app.post("/handleReceptionnistAppointments", (req, res) => {
 
-  var appts = "SELECT (@cnt := @cnt + 1) AS id, CONCAT(person_patient.first_name, ' ', person_patient.last_name) AS patient_name, CONCAT(person_employee.first_name, ' ', person_employee.last_name) AS employee_name , appointment.appointment_type, appointment.appointment_date, appointment.start_time, appointment.end_time FROM appointment LEFT JOIN appointment_employeeid ON appointment.appointment_id = appointment_employeeid.appointment_id LEFT JOIN  person AS person_employee ON person_employee.SSN = appointment_employeeid.employee_id LEFT JOIN  person AS person_patient ON person_patient.SSN = appointment.patient_id CROSS JOIN (SELECT @cnt := 0) AS dummy;";
+  var appts = "SELECT (@cnt := @cnt + 1) AS id, CONCAT(person_patient.first_name, ' ', person_patient.last_name) AS patient_name, appointment.appointment_date, CONCAT(person_employee.first_name, ' ', person_employee.last_name) AS employee_name, appointment.appointment_type, appointment.appointment_date, appointment.start_time, appointment.end_time FROM appointment LEFT JOIN appointment_employeeid ON appointment.appointment_id = appointment_employeeid.appointment_id LEFT JOIN  person AS person_employee ON person_employee.SSN = appointment_employeeid.employee_id LEFT JOIN  person AS person_patient ON person_patient.SSN = appointment.patient_id CROSS JOIN (SELECT @cnt := 0) AS dummy WHERE appointment.appointment_date >= CURDATE();";
 
   pool.query(appts, (err, result) => {
     if (!err) {
       var resultQuery = JSON.parse(JSON.stringify(result))
-      console.log(resultQuery);
-      console.log("Success for appts");
+      /* console.log(resultQuery);
+      console.log("Success for appts"); */
 
       res.send(resultQuery);
     } else {
@@ -287,7 +286,7 @@ app.post("/handleNewAppointment", (req, res) => {
             }
           });
         } else {
-          console.log("Error while performing Query 2.");
+          console.log("Error while performing appointment_id.");
         }
       });
 
@@ -296,7 +295,7 @@ app.post("/handleNewAppointment", (req, res) => {
     }
   });
 });
-
+/* 223456789 */
 
 app.post("/handleNewAppointmentReceptionnist", (req, res) => {
   if(String(req.body.first_name) == '' || String(req.body.last_name) == ''){
@@ -347,7 +346,7 @@ app.post("/handleNewAppointmentReceptionnist", (req, res) => {
             }
           });
         } else {
-          console.log("Error while performing Query 1.");
+          console.log("Error while performing insert_appointment.");
         }
       });
 
@@ -369,49 +368,67 @@ app.post("/handleNewUser", (req, res) => {
       console.log(resultQuery);
       console.log("Success for insertPerson");
 
-      const SSN = resultQuery[0].SSN;
-      const firstName = resultQuery[0].first_name;
+      const SSN = req.body.SSN;
+      const firstName = req.body.first_name;
 
-      var insertUser = "Select @Var := (MAX(user_id) + 1) AS max_id From user; INSERT INTO user VALUES (@Var, '"+firstName+"', "+SSN+", '"+SSN+"');";
+      var selectMaxID = "SELECT MAX(user_id) AS max_id From user;"
 
-      console.log(insertUser);
-      console.log("insertUser");
+      console.log(selectMaxID);
+      console.log("selectMaxID");
 
-      pool.query(insertUser, (err, result) => {
+      pool.query(selectMaxID, (err, result) => {
         if (!err) {
           var resultQuery = JSON.parse(JSON.stringify(result))
           console.log(resultQuery);
-          console.log("Success for insertUser");
-          
-          var user_id = resultQuery[0].max_id;
+          console.log("Success for selectMaxID");
 
-          var addPatient = "INSERT INTO patient VALUES("+SSN+", 12514, 'sunlife');";
-          var addEmployee = "";
+          const max_id = Number(resultQuery[0].max_id)+1;
 
-          if(String(req.body.employee_role) != ""){
+          var insertUser = "INSERT INTO user VALUES ("+max_id+", '"+firstName+"', "+SSN+", '"+SSN+"');";
 
-          }
-
-          pool.query(appointment_id, (err, result) => {
+          console.log(insertUser);
+          console.log("insertUser");
+    
+          pool.query(insertUser, (err, result) => {
             if (!err) {
               var resultQuery = JSON.parse(JSON.stringify(result))
               console.log(resultQuery);
-              console.log("Success for appointment_id");
-        
-              pool.query(insert_appointment_employeeid, (err, result) => {
-                if (!err) {
-                  console.log("Success for insert_appointment_employeeid");
-            
-                  res.send("Success!");
-                } else {
-                  console.log("Error while performing Query 3.");
-                }
-              });
+              console.log("Success for insertUser");
+    
+              var addPatient = "INSERT INTO patient VALUES("+SSN+", "+max_id+", '"+req.body.insurance+"');";
+              var addEmployee = "INSERT INTO employee (employee_id, branch_id, salary, employee_type, employee_role) VALUES("+SSN+", "+req.body.branch_id+", "+req.body.salary+", '"+req.body.employee_type+"', '"+req.body.employee_role+"')";
+    
+              console.log(req.body.isPatient);
+              console.log("req.body.isPatient");
+              console.log(req.body.isEmployee);
+              console.log("req.body.isEmployee");
+
+              if(req.body.isPatient){
+                pool.query(addPatient, (err, result) => {
+                  if (!err) {
+                    var resultQuery = JSON.parse(JSON.stringify(result))
+                    console.log(resultQuery);
+                    console.log("Success for addPatient");
+                  } else {
+                    console.log("Error while performing addPatient.");
+                  }
+                });
+              } 
+              if(req.body.isEmployee) {
+                pool.query(addEmployee, (err, result) => {
+                  if (!err) {
+                    var resultQuery = JSON.parse(JSON.stringify(result))
+                    console.log(resultQuery);
+                    console.log("Success for addEmployee");
+                  } else {
+                    console.log("Error while performing addEmployee.");
+                  }
+                });
+              }
             } else {
-              console.log("Error while performing Query 2.");
+              console.log("Error while performing Query 1.");
             }
           });
-
         } else {
           console.log("Error while performing Query 1.");
         }

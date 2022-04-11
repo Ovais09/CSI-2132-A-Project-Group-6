@@ -7,106 +7,102 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DateTimePicker from '@mui/lab/DateTimePicker';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-
+import InputAdornment from '@mui/material/InputAdornment';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
+import FormLabel from '@mui/material/FormLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 const tempValues = [
   {
-    patient_id: "patient_id",
-    user_id: "user_id",
-    appointment_type: "appointment_type",
-    appointment_date: "appointment_date",
-    start_time: "start_time",
-    end_time: "end_time",
-    employee_id: "employee_id"
+    SSN: "ssn",
+    first_name: "",
+    middle_name: "",
+    last_name: "",
+    gender: "x",
+    email_address: "email@address.com",
+    date_of_birth: "DOB",
+    phone_number: "phoneNumber",
+    house_number: "houseNumber",
+    street: "street",
+    city: "city",
+    province: "province",
+    employee_role: "dentist",
+    employee_type: "full_time",
+    salary: "0",
+    branch_id: "patient",
+    insurance: ""
   }
 ];
 
-const tempDentists = [
-  {
-    ID: 1,
-    first_name: "name",
-    last_name: "name2",
-    employee_id: "employee_id"
-  },
-  {
-    ID: 2,
-    first_name: "name3",
-    last_name: "name4",
-    employee_id: "employee_id2"
-  }
-];
-
-const procedures = [
-  {
-    procedure_type: "Cleaning"
-  },
-  {
-    procedure_type: "Diagnosis"
-  },
-  {
-    procedure_type: "Surgery"
-  }
-];
-
-export default function NewUserForm({userID}) {
+export default function NewUserForm() {
   const [open, setOpen] = React.useState(false);
-  const [dentist, setDentist] = React.useState('');
-  const [procedure, setProcedure] = React.useState('');
-  const [dateValue, setDateValue] = React.useState(new Date());
-  const [dentists, setDentists] = React.useState(tempDentists);
   const [patientValues, setPatientValues] = React.useState(tempValues);
+  const [showPatient, setShowPatient] = React.useState(false);
+  const [showEmployee, setShowEmployee] = React.useState(false);
   
   const submit = () => {
     console.log("Submited");    
     handleClose();
-    submitAppointment();
+    submitUser();
   };
 
-  const handleDentistChange = (event) => {
-    setDentist(Number(event.target.value) || '');
-    console.log('dentists['+Number(Number(event.target.value)-1)+'].employee_id');
-    console.log(dentists[Number(Number(event.target.value)-1)].employee_id);
-    setPatientValues({...patientValues, employee_id: dentists[Number(Number(event.target.value)-1)].employee_id});
+/*
+  const handlePatientFNChange = (event) => {
+    console.log(patientFN);
+    console.log("patientFN");
+    //setPatientFN(event.target.value);
+    setPatientValues({...patientValues, first_name: event.target.value});
+  };
+  const handlePatientMNChange = (event) => {
+    console.log(patientMN);
+    console.log("patientMN");
+    //setPatientMN(event.target.value);
+    setPatientValues({...patientValues, middle_name: event.target.value});
   };
 
-  const handleProcedureChange = (event) => {
-    setProcedure(Number(event.target.value) || '');
-    console.log('procedures['+Number(Number(event.target.value)-1)+'].procedure_type');
-    console.log(procedures[Number(Number(event.target.value)-1)].procedure_type);
-    setPatientValues({...patientValues, appointment_type: procedures[Number(Number(event.target.value)-1)].procedure_type});
+  const handlePatientLNChange = (event) => {
+    console.log(patientLN);
+    console.log("patientLN");
+    setPatientLN(event.target.value);
+    setPatientValues({...patientValues, last_name: event.target.value});
   };
 
-  const handleTimeChange = (newValue) => {
-    setDateValue(newValue);
-    console.log(newValue);
-    console.log('newValue');
+  const handleInsuranceChange = (event) => {
+    setPatientValues({...patientValues, insurance: event.target.value});
+  }
 
-    var month = dateValue.getMonth()+1;
-    if (month < 10){
-      month = '0'+month;
-    }
-    var day = dateValue.getDate();
-    if (day < 10){
-      day = '0'+day;
-    }
-    const apDate = dateValue.getFullYear()+'-'+month+'-'+day;
-    const apTimeStart = dateValue.getHours()+":"+dateValue.getMinutes()+":00";
-    const apTimeEnd = (dateValue.getHours()+1)+":"+dateValue.getMinutes()+":00";
+   const handlePhoneChange = (event) => {
+    setPatientValues({...patientValues, phone_number: event.target.value});
+  } 
 
-    setPatientValues({...patientValues, appointment_date: apDate, start_time: apTimeStart, end_time: apTimeEnd});
+  const handleEmailChange = (event) => {
+    setPatientValues({...patientValues, email_address: event.target.value});
+  }
+
+  const handleSalaryChange = (prop) => (event) => {
+    setPatientValues({...patientValues, salary: event.target.value});
   };
 
+  const handleGenderChange = (prop) => (event) => {
+    setPatientValues({...patientValues, gender: event.target.value});
+  };
+*/
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -117,11 +113,11 @@ export default function NewUserForm({userID}) {
     }
   };
 
-  const submitAppointment = () => {
-    fetch('http://localhost:3000/handleNewAppointment', {
+  const submitUser = () => {
+    fetch('http://localhost:3000/handleNewUser', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
-      body: JSON.stringify({ patient_id: patientValues.patient_id, user_id: userID, appointment_type: patientValues.appointment_type, appointment_date: patientValues.appointment_date, start_time: patientValues.start_time, end_time: patientValues.end_time, employee_id: patientValues.employee_id })
+      body: JSON.stringify({ SSN: patientValues.SSN, first_name: patientValues.first_name, middle_name: patientValues.middle_name, last_name: patientValues.last_name, gender: patientValues.gender, email_address: patientValues.email_address, date_of_birth: patientValues.date_of_birth, phone_number: patientValues.phone_number, house_number: patientValues.house_number, street: patientValues.street, city: patientValues.city, province: patientValues.province, isPatient: showPatient, isEmployee: showEmployee ,insurance: patientValues.insurance, branch_id: patientValues.branch_id, salary: patientValues.salary, employee_type: patientValues.employee_type, employee_role: patientValues.employee_role })
     }).then(res => {
       if(res.ok){
         return res.json();
@@ -130,94 +126,157 @@ export default function NewUserForm({userID}) {
     });
   };
 
-  const getValues = () => {
-
-    fetch('http://localhost:3000/handleDoctorList', {
-      method: "POST",
-      headers: {  'Content-Type': 'application/json' },
-      body: JSON.stringify()
-    }).then(res => {
-      if(res.ok){
-        return res.json();
-      }
-      throw res;
-    }).then(data => {
-      setDentists(data);
-    });
-    
-    fetch('http://localhost:3000/handlePatientID', {
-      method: "POST",
-      headers: {  'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: userID })
-    }).then(res => {
-      if(res.ok){
-        return res.json();
-      }
-      throw res;
-    }).then(data => {
-      setPatientValues({...patientValues, patient_id: data.patient_id, user_id: userID});
-    });
-  }
-  useEffect(() => {
-    getValues();
-  },[]);
-
   return (
-    <div>
-        
+    <div Style={{ width: '85vw'}}>
       <IconButton onClick={handleClickOpen}><AddCircleIcon/></IconButton>
       <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-            <DialogTitle>Please complete the form</DialogTitle>
+            <DialogTitle>New User</DialogTitle>
             <DialogContent>
             <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
                 <Stack spacing={3}>
-                    <FormControl sx={{ m: 1, minWidth: 120 }}>
-                        <InputLabel id="Dentist-dialog">Dentist</InputLabel>
-                        <Select
-                            labelId="Dentist-dialog-label"
-                            id="Dentist-dialog"
-                            value={dentist}
-                            onChange={handleDentistChange}
-                            input={<OutlinedInput label="Dentist" />}
-                        >
-                            <MenuItem value="">
-                            <em>Please Select One</em>
-                            </MenuItem>
-                              {dentists.map((d, index) => (
-                                <MenuItem value={d.ID}>{d.first_name} {d.last_name}</MenuItem>
-                              ))}
-                        </Select>
+                  {/* first name, middle name */}
+                  <Stack direction="row" spacing={2}>
+                    <FormControl fullWidth sx={{ m: 1 }}>
+                      <TextField id="patient-first-name" label="First Name" variant="outlined" onChange={(e) => setPatientValues({...patientValues, first_name: e.target.value})} />
                     </FormControl>
-                    <FormControl sx={{ m: 1, minWidth: 120 }}>
-                        <InputLabel id="Procedure-dialog">Procedure</InputLabel>
-                        <Select
-                            labelId="Procedure-dialog-label"
-                            id="Procedure-dialog"
-                            value={procedure}
-                            onChange={handleProcedureChange}
-                            input={<OutlinedInput label="Procedure" />}
-                        >
-                            <MenuItem value="">
-                            <em>Please Select One</em>
-                            </MenuItem>
-                            <MenuItem value={1}>Cleaning</MenuItem>
-                            <MenuItem value={2}>Diagnosis</MenuItem>
-                            <MenuItem value={3}>Surgery</MenuItem>
-                        </Select>
+                    <FormControl fullWidth sx={{ m: 1 }}>
+                      <TextField id="patient-middle-name" label="Middle Name" variant="outlined" onChange={(e) => setPatientValues({...patientValues, middle_name: e.target.value})} />
                     </FormControl>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                            renderInput={(props) => <TextField {...props} />}
-                            label="DateTimePicker"
-                            value={dateValue}
-                            onChange={(newValue) => {
-                              handleTimeChange(newValue);
-                            }}
-                            minDate={new Date()}
-                            minTime={new Date(0, 0, 0, 8)}
-                            maxTime={new Date(0, 0, 0, 18, 45)}
-                        />
-                    </LocalizationProvider>
+                  </Stack>
+                  {/* last name, ssn */}
+                  <Stack direction="row" spacing={2}>
+                    <FormControl fullWidth sx={{ m: 1 }}>
+                      <TextField  id="patient-last-name" label="Last Name" variant="outlined" onChange={(e) => setPatientValues({...patientValues, last_name: e.target.value})}/>
+                    </FormControl>
+                    <FormControl fullWidth sx={{ m: 1 }}>
+                      <TextField id="ssn" type="number" label="Social Security Number" variant="outlined" onChange={(e) => setPatientValues({...patientValues, SSN: e.target.value})} />
+                    </FormControl>
+                  </Stack>
+                  {/* DOB */}
+                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <CalendarTodayIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                    <TextField id="input-with-sx" label="Date of birth" placeholder="YYYY-MM-DD" variant="standard" onChange={(e) => setPatientValues({...patientValues, date_of_birth: e.target.value})}/>
+                  </Box>
+                  {/* phone, mail */}
+                  <Stack direction="row" spacing={2}>
+                    <FormControl  fullWidth sx={{ m: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                        <LocalPhoneIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                        <TextField id="input-with-sx" label="Phone Number" placeholder="xxx-xxx-xxxx" variant="standard" onChange={(e) => setPatientValues({...patientValues, phone_number: e.target.value})}/>
+                      </Box>
+                    </FormControl>
+                    <FormControl fullWidth sx={{ mx: 1 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                        <AlternateEmailIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                        <TextField id="input-with-sx" label="Email Address" placeholder="xxx@xxx.xxx" variant="standard" onChange={(e) => setPatientValues({...patientValues, email_address: e.target.value})}/>
+                      </Box>
+                    </FormControl>
+                  </Stack>
+                  {/* house num, street */}
+                  <Stack direction="row" spacing={2}>
+                    <FormControl fullWidth sx={{ mx: 1 }}>
+                      <TextField id="house-number" type="number" label="House Number" variant="outlined" onChange={(e) => setPatientValues({...patientValues, house_number: e.target.value})} />
+                    </FormControl>
+                    <FormControl fullWidth sx={{ mx: 1 }}>
+                      <TextField id="street-name" label="Street" variant="outlined" onChange={(e) => setPatientValues({...patientValues, street: e.target.value})} />
+                    </FormControl>
+                  </Stack>
+                  {/* city, province */}
+                  <Stack direction="row" spacing={2}>
+                    <FormControl fullWidth sx={{ mx: 1 }}>
+                      <TextField id="city" label="City" variant="outlined" onChange={(e) => setPatientValues({...patientValues, city: e.target.value})} />
+                    </FormControl>
+                    <FormControl fullWidth sx={{ mx: 1 }}>
+                      <InputLabel id="Dentist-dialog">Province</InputLabel>
+                      <Select 
+                          labelId="province-label"
+                          id="province-dialog"
+                          onChange={(e) => setPatientValues({...patientValues, province: e.target.value})}
+                          input={<OutlinedInput label="Province" />}
+                      >
+                          <MenuItem value=""><em>Please Select One</em></MenuItem>
+                          <MenuItem value="AB">Alberta</MenuItem>
+                          <MenuItem value="BC">British Columbia</MenuItem>
+                          <MenuItem value="MB">Manitoba</MenuItem>
+                          <MenuItem value="NB">New Brunswick</MenuItem>
+                          <MenuItem value="NL">Newfoundland and Labrador</MenuItem>
+                          <MenuItem value="NT">Northwest Territories</MenuItem>
+                          <MenuItem value="NS">Nova Scotia</MenuItem>
+                          <MenuItem value="NU">Nunavut</MenuItem>
+                          <MenuItem value="ON">Ontario</MenuItem>
+                          <MenuItem value="PE">Prince Edward Island</MenuItem>
+                          <MenuItem value="QC">Quebec</MenuItem>
+                          <MenuItem value="SK">Saskatchewan</MenuItem>
+                          <MenuItem value="YT">Yukon</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Stack>
+                  <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+                  <RadioGroup sx={{ width: '100%', display: 'flex', flexWrap: 'wrap' }} row aria-labelledby="radio-buttons-label" name="radio-buttons" onChange={(e) => setPatientValues({...patientValues, gender: e.target.value})} >
+                    <FormControlLabel value="F" control={<Radio />} label="Female" />
+                    <FormControlLabel value="M" control={<Radio />} label="Male" />
+                    <FormControlLabel value="X" control={<Radio />} label="Other" />
+                  </RadioGroup>
+                  <FormLabel id="demo-row-radio-buttons-group-label">User type</FormLabel>
+                  <Stack direction="row">
+                    <FormControlLabel control={<Checkbox />} onChange={() => setShowPatient(!showPatient)} label="Patient" />
+                    <FormControlLabel control={<Checkbox />} onChange={() => setShowEmployee(!showEmployee)} label="Employee" />
+                  </Stack>
+                    
+                    {showPatient ? (
+                      <div>
+                        <Divider> <Chip label="Patient info" /> </Divider>
+                        <FormControl sx={{ m: 1, minWidth: 120 }}>
+                          <TextField id="patient-first-name" label="Insurance Company" variant="outlined" onChange={(e) => setPatientValues({...patientValues, insurance: e.target.value})} />
+                        </FormControl>
+                      </div>
+                    ) : null}
+                    
+                    {showEmployee ? (
+                      <div>
+                        <Divider> <Chip label="Patient info" /> </Divider>
+                        {/* Branch id, salary */}
+                          <Stack direction="row" spacing={2}>
+                          <FormControl fullWidth sx={{ m: 1 }}>
+                            <InputLabel sx={{ width: '120px' }} id="branch-dialog">Branch</InputLabel>
+                            <Select
+                                labelId="Branch-label"
+                                id="Branch-dialog"
+                                onChange={(e) => setPatientValues({...patientValues, branch_id: e.target.value})}
+                                input={<OutlinedInput label="Branch" />}
+                            >
+                                <MenuItem value=""><em>Please Select One</em></MenuItem>
+                                <MenuItem value="1">Ottawa</MenuItem>
+                                <MenuItem value="2">Toronto</MenuItem>
+                                <MenuItem value="3">Montreal</MenuItem>
+                                <MenuItem value="4">Quebec City</MenuItem>
+                            </Select>
+                          </FormControl>
+                          <FormControl fullWidth sx={{ m: 1 }}>
+                            <InputLabel htmlFor="outlined-adornment-amount">Salary</InputLabel>
+                            <OutlinedInput
+                              id="outlined-adornment-amount"
+                              onChange={(e) => setPatientValues({...patientValues, salary: e.target.value})}
+                              startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                              label="Salary"
+                            />
+                          </FormControl>
+                          </Stack>
+                        {/* employee type */}
+                        <FormLabel id="demo-row-radio-buttons-group-label">Employee Type</FormLabel>
+                        <RadioGroup row aria-labelledby="radio-buttons-label" name="radio-buttons" onChange={(e) => setPatientValues({...patientValues, employee_type: e.target.value})} >
+                          <FormControlLabel value="full_time" control={<Radio />} label="Full time" />
+                          <FormControlLabel value="part_time" control={<Radio />} label="Part time" />
+                        </RadioGroup>
+                        {/* employee role */}
+                        <FormLabel id="demo-row-radio-buttons-group-label">Employee Role</FormLabel>
+                        <RadioGroup row aria-labelledby="radio-buttons-label" name="radio-buttons" onChange={(e) => setPatientValues({...patientValues, employee_role: e.target.value})} >
+                          <FormControlLabel value="receptionnist" control={<Radio />} label="Receptionnist" />
+                          <FormControlLabel value="hygenist" control={<Radio />} label="Hygenist" />
+                          <FormControlLabel value="dentist" control={<Radio />} label="Dentist" />
+                        </RadioGroup>
+                      </div>
+                    ) : null}
                 </Stack>
             </Box>
             </DialogContent>

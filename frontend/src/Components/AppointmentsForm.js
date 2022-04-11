@@ -76,38 +76,24 @@ export default function AppointmentsForm() {
 
   const handleDentistChange = (event) => {
     setDentist(Number(event.target.value) || '');
-    console.log('dentists['+Number(Number(event.target.value)-1)+'].employee_id');
-    console.log(dentists[Number(Number(event.target.value)-1)].employee_id);
     setPatientValues({...patientValues, employee_id: dentists[Number(Number(event.target.value)-1)].employee_id});
   };
 
   const handlePatientFNChange = (event) => {
-    console.log(patientFN);
-    console.log("patientFN");
-    console.log(patientLN);
-    console.log("patientLN");
     setPatientFN(event.target.value);
   };
 
   const handlePatientLNChange = (event) => {
-    console.log(patientFN);
-    console.log("patientFN");
-    console.log(patientLN);
-    console.log("patientLN");
     setPatientLN(event.target.value);
   };
 
   const handleProcedureChange = (event) => {
     setProcedure(Number(event.target.value) || '');
-    console.log('procedures['+Number(Number(event.target.value)-1)+'].procedure_type');
-    console.log(procedures[Number(Number(event.target.value)-1)].procedure_type);
     setPatientValues({...patientValues, appointment_type: procedures[Number(Number(event.target.value)-1)].procedure_type});
   };
 
   const handleTimeChange = (newValue) => {
     setDateValue(newValue);
-    console.log(newValue);
-    console.log('newValue');
 
     var month = dateValue.getMonth()+1;
     if (month < 10){
