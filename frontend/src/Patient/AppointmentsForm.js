@@ -118,7 +118,7 @@ export default function DialogSelect({userID}) {
   };
 
   const submitAppointment = () => {
-    fetch('http://localhost:3000/handleNewAppointment', {
+    fetch('https://dental-care-management-system.herokuapp.com/handleNewAppointment', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify({ patient_id: patientValues.patient_id, user_id: userID, appointment_type: patientValues.appointment_type, appointment_date: patientValues.appointment_date, start_time: patientValues.start_time, end_time: patientValues.end_time, employee_id: patientValues.employee_id })
@@ -132,7 +132,7 @@ export default function DialogSelect({userID}) {
 
   const getValues = () => {
 
-    fetch('http://localhost:3000/handleDoctorList', {
+    fetch('https://dental-care-management-system.herokuapp.com/handleDoctorList', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify()
@@ -145,7 +145,7 @@ export default function DialogSelect({userID}) {
       setDentists(data);
     });
     
-    fetch('http://localhost:3000/handlePatientID', {
+    fetch('https://dental-care-management-system.herokuapp.com/handlePatientID', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify({ user_id: userID })

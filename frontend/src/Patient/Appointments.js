@@ -106,7 +106,7 @@ export default function Appointments({userID}) {
     }
     todayDate = todayDate.getFullYear()+'-'+month+'-'+day;
 
-    fetch('http://localhost:3000/handlePatientPastAppointments', {
+    fetch('https://dental-care-management-system.herokuapp.com/handlePatientPastAppointments', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify({ user_id: userID, date: todayDate })
@@ -119,7 +119,7 @@ export default function Appointments({userID}) {
       setRowsPast(data);
     });
     
-    fetch('http://localhost:3000/handlePatientFutureAppointments', {
+    fetch('https://dental-care-management-system.herokuapp.com/handlePatientFutureAppointments', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify({ user_id: userID, date: todayDate })

@@ -54,7 +54,7 @@ function Login() {
 
   const getUserInfo = () => {
     setValues({ ...values, loggedIn: true });
-    fetch('http://localhost:3000/handle', {
+    fetch('https://dental-care-management-system.herokuapp.com/handle', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify({ username: values.username, password: values.password, role: values.role })

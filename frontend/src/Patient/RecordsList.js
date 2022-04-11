@@ -121,7 +121,7 @@ export default function Records({userID}) {
 
   
   const getUserRecords = () => {
-    fetch('http://localhost:3000/handleUserRecords', {
+    fetch('https://dental-care-management-system.herokuapp.com/handleUserRecords', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify({lookingFor: 'user_id', equals: userID})

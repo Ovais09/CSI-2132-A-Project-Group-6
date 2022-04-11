@@ -78,7 +78,7 @@ function PatientProfile({userID}) {
     }
 
   const getUserInfo = () => {
-    fetch('http://localhost:3000/handleProfile', {
+    fetch('https://dental-care-management-system.herokuapp.com/handleProfile', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify({ user_id: userID })

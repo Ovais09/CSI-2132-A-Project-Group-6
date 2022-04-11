@@ -122,7 +122,7 @@ export default function AppointmentsForm() {
 
   const submitAppointment = () => {
 
-    fetch('http://localhost:3000/handleNewAppointmentReceptionnist', {
+    fetch('https://dental-care-management-system.herokuapp.com/handleNewAppointmentReceptionnist', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify({ first_name: patientFN, last_name: patientLN, appointment_type: patientValues.appointment_type, appointment_date: patientValues.appointment_date, start_time: patientValues.start_time, end_time: patientValues.end_time, employee_id: patientValues.employee_id })
@@ -136,7 +136,7 @@ export default function AppointmentsForm() {
 
   const getValues = () => {
 
-    fetch('http://localhost:3000/handleDoctorList', {
+    fetch('https://dental-care-management-system.herokuapp.com/handleDoctorList', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify()

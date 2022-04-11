@@ -191,7 +191,7 @@ export default function DataGridRecords() {
   }
 
   const getUserRecords = (user) => {
-    fetch('http://localhost:3000/handleUserRecords', {
+    fetch('https://dental-care-management-system.herokuapp.com/handleUserRecords', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify({lookingFor: "CONCAT(person_patient.first_name, ' ', person_patient.last_name)", equals: "'"+rows[Number(user)].person_name.replace('  ', ' ')+"'"})
@@ -206,7 +206,7 @@ export default function DataGridRecords() {
   }
 
   const getUsers = () => {
-    fetch('http://localhost:3000/handleReceptionnistUsers', {
+    fetch('https://dental-care-management-system.herokuapp.com/handleReceptionnistUsers', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify()

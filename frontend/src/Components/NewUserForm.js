@@ -114,7 +114,7 @@ export default function NewUserForm() {
   };
 
   const submitUser = () => {
-    fetch('http://localhost:3000/handleNewUser', {
+    fetch('https://dental-care-management-system.herokuapp.com/handleNewUser', {
       method: "POST",
       headers: {  'Content-Type': 'application/json' },
       body: JSON.stringify({ SSN: patientValues.SSN, first_name: patientValues.first_name, middle_name: patientValues.middle_name, last_name: patientValues.last_name, gender: patientValues.gender, email_address: patientValues.email_address, date_of_birth: patientValues.date_of_birth, phone_number: patientValues.phone_number, house_number: patientValues.house_number, street: patientValues.street, city: patientValues.city, province: patientValues.province, isPatient: showPatient, isEmployee: showEmployee ,insurance: patientValues.insurance, branch_id: patientValues.branch_id, salary: patientValues.salary, employee_type: patientValues.employee_type, employee_role: patientValues.employee_role })
