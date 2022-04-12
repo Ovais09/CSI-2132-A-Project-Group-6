@@ -39,7 +39,7 @@ function Receptionist() {
     <div className="Patient">
       <ThemeProvider theme = {theme}>
         <Paper>
-          <Typography variant="h2">branchName</Typography>
+          <Typography variant="h2">Receptionnist UI</Typography>
           <Navbar pageName={"RECEPTIONIST"} />
           <Grid container id="Grid">
            <Grid direction="column" sm={12} md={6}>

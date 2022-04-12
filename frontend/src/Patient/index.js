@@ -41,7 +41,7 @@ function Patient({userID}) {
     <div className="Patient">
       <ThemeProvider theme = {theme}>
         <Paper>
-          <Typography variant="h2">branchName</Typography>
+          <Typography variant="h2">Patient UI</Typography>
           <Navbar pageName={"PATIENT"} />
           <Grid container id="Grid">
             <Grid item sm={12} md={6}>

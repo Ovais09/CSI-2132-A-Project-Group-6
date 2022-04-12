@@ -38,7 +38,7 @@ function Dentist({branchName}) {
     <div className="Dentist">
       <ThemeProvider theme = {theme}>
         <Paper>
-          <Typography variant="h2">branchName</Typography>
+          <Typography variant="h2">Dentist UI</Typography>
           <Navbar pageName={"DENTIST"} />
           <Grid container id="Grid">
            <Grid direction="column" sm={12} md={6}>
