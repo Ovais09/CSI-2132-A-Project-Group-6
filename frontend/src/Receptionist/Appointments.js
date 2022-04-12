@@ -20,7 +20,14 @@ const columns = [
   { 
     field: 'appointment_type', 
     headerName: 'Appointment Type', 
-    width: 150 
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'appointment_date',
+    headerName: 'Appointment Date',
+    width: 150,
+    editable: true,
   },
   {
     field: 'start_time',
